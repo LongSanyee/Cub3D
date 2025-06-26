@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/26 08:29:51 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/26 09:25:57 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 #  define BUFFER_SIZE 42
 # endif
 
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include "minilibx/mlx.h"
+# include "minilibx/mlx.h"
+# include <stdio.h>
+# include <fcntl.h>
+# include <unistd.h>
 # include <limits.h>
 # include <fcntl.h>
 # include <stdlib.h>
@@ -42,5 +42,11 @@ char	*ft_strjoin(char *s1, const char *s2);
 char	*ft_strdup(const char *s);
 char	*ft_calloc(size_t count, size_t size);
 size_t	ft_strlen(const char *str);
+int     ft_atoi(char *str);
+int		doublearraylen(char **av);
+int		linelen(char **av);
+size_t	ft_strlcpy(char *dst, char *src, size_t dstsize);
+char **getmap(char **av);
+int	filefd(char **av);
 
 #endif

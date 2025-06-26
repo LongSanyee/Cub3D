@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/26 08:46:46 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/26 09:31:37 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void createwindow(t_mlx *mlx)
 int parse(int ac)
 {
     if (ac != 2)
-        return (0);
+        return (printf("Usage: ./cub3D FILE.CUB !\n"), exit(1), 0);
     return (1);
 }
 
@@ -32,9 +32,7 @@ int linelen(char **av)
     size_t len;
     char *line;
 
-    j = open(av[1], O_RDONLY);
-    if (j == -1)
-        return (printf("Invalid CUB File !\n"), exit(1), 1);
+    j = filefd(av);
     len = 0;
     while ((line = get_next_line(j)) != NULL)
     {
@@ -42,7 +40,6 @@ int linelen(char **av)
             len = ft_strlen(line);
         free(line);
     }
-    close(j);
     return (len);
 }
 
@@ -52,26 +49,29 @@ int doublearraylen(char **av)
     char *line;
     size_t len;
     
-    j = open(av[1], O_RDONLY);
-    if (j == -1)
-        return (printf("Invalid CUB File !\n"), exit(1), 1);
+    j = filefd(av);
     len = 0;
     while ((line = get_next_line(j)) != NULL)
     {
         len++;
         free(line);
     }
-    close(j);
     return (len);
 }
 
 int main(int ac, char **av)
 {
     // t_mlx win;
+    char **map;
     
     // (void)av;
-    if (!parse(ac))
-        return (printf("Invalid Input!\n"), 1);
-    // createwindow(&win);
+    parse(ac);
+    map = getmap(av);
+    int i = 0;
+    while (map[i])
+    {
+        printf("%s", map[i]);
+        i++;
+    }
 }
     
