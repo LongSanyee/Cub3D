@@ -6,18 +6,12 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/26 09:31:37 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/27 17:45:24 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-void createwindow(t_mlx *mlx)
-{
-    mlx->win = mlx_init();
-    mlx->mlxwin = mlx_new_window(mlx->win, WIDTH, LENGTH, "CUB3D");
-    mlx_loop(mlx->win);
-}
 
 int parse(int ac)
 {
@@ -32,7 +26,9 @@ int linelen(char **av)
     size_t len;
     char *line;
 
-    j = filefd(av);
+    j = open(av[1], O_RDONLY);
+	if (j == -1)
+    return (printf("Invalid CUB File !\n"), exit(1), 0);
     len = 0;
     while ((line = get_next_line(j)) != NULL)
     {
@@ -40,6 +36,7 @@ int linelen(char **av)
             len = ft_strlen(line);
         free(line);
     }
+    close(j);
     return (len);
 }
 
@@ -49,29 +46,49 @@ int doublearraylen(char **av)
     char *line;
     size_t len;
     
-    j = filefd(av);
+    j = open(av[1], O_RDONLY);
+	if (j == -1)
+    return (printf("Invalid CUB File !\n"), exit(1), 0);
     len = 0;
     while ((line = get_next_line(j)) != NULL)
     {
         len++;
         free(line);
     }
+    close(j);
     return (len);
+}
+
+
+// int validatemap(char **av)
+// {
+    //     int     j;
+    //     int     i;
+    //     char    *tmp;
+    //     char    *line;
+    
+//     j = open(av[1], O_RDONLY);
+//     if (j == -1)
+//         return (printf("Invalid CUB File !\n"), exit(1), 0);
+//     i = 0;
+//     while ((line = get_next_line(j)) != NULL)
+//     {
+    
+//     }
+// }
+
+void createwindow(t_mlx *mlx)
+{
+    mlx->win = mlx_init();
+    mlx->mlxwin = mlx_new_window(mlx->win, WIDTH, LENGTH, "CUB3D");
+    mlx_loop(mlx->win);
 }
 
 int main(int ac, char **av)
 {
     // t_mlx win;
-    char **map;
     
-    // (void)av;
+    (void)av;
     parse(ac);
-    map = getmap(av);
-    int i = 0;
-    while (map[i])
-    {
-        printf("%s", map[i]);
-        i++;
-    }
 }
     

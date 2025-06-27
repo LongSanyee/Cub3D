@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 08:50:38 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/26 09:23:25 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/26 19:36:58 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,30 @@ size_t	ft_strlcpy(char *dst, char *src, size_t dstsize)
 	}
 	dst[i] = '\0';
 	return (srclen);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*q;
+	size_t	i;
+	size_t	slen;
+
+	if (!s)
+		return (NULL);
+	slen = ft_strlen(s);
+	if (len > slen - start)
+		len = slen - start;
+	if (start >= slen)
+		return ((char *) ft_calloc(1, sizeof(char)));
+	i = 0;
+	q = (char *)malloc(sizeof(char) * (len + 1));
+	if (!q)
+		return (NULL);
+	while (i < len)
+	{
+		q[i] = s[start + i];
+		i++;
+	}
+	q[i] = '\0';
+	return (q);
 }
