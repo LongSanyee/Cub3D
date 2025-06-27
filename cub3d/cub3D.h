@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/27 18:24:48 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/27 19:56:39 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct	s_mlx
 typedef struct	s_data
 {
 	char	**map;
+	char	**cubfile;
 	char	**textures;
 	int		ceiling[3];
 	int		floor[3];
@@ -54,9 +55,7 @@ int     ft_atoi(char *str);
 int		doublearraylen(char **av);
 int		linelen(char **av);
 size_t	ft_strlcpy(char *dst, char *src, size_t dstsize);
-int		map(t_data *data, char **av);
-int getceiling(t_data *data, char **av);
-int getfloor(t_data *data, char **av);
+int	ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 #endif
