@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 11:09:14 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 11:57:59 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int	extractcubfile(t_data *data, char **av)
 	{
 		data->cubfile[k] = malloc(ft_strlen(line) + 1);
 		ft_strlcpy(data->cubfile[k], line, ft_strlen(line) + 1);
+		if (data->cubfile[k][ft_strlen(data->cubfile[k]) - 1] == '\n')
+			data->cubfile[k][ft_strlen(data->cubfile[k]) - 1] = '\0';
 		k++;
 	}
 	data->cubfile[k] = NULL;
