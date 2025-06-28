@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/27 19:56:39 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 11:07:02 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@
 #define WIDTH 800
 #define LENGTH 600
 
+typedef struct s_grid
+{
+	int y;
+	int x;
+}	t_grid;
 
 typedef struct	s_mlx
 {
@@ -40,6 +45,7 @@ typedef struct	s_mlx
 typedef struct	s_data
 {
 	char	**map;
+	size_t	len;
 	char	**cubfile;
 	char	**textures;
 	int		ceiling[3];
@@ -52,10 +58,13 @@ char	*ft_strdup(const char *s);
 char	*ft_calloc(size_t count, size_t size);
 size_t	ft_strlen(const char *str);
 int     ft_atoi(char *str);
-int		doublearraylen(char **av);
-int		linelen(char **av);
+int getmap(t_data *data);
+void	doublearraylen(char **av, t_data *data);
 size_t	ft_strlcpy(char *dst, char *src, size_t dstsize);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
+int getceiling(t_data *data);
+int getfloor(t_data *data);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strchr(const char *s, int c);
 
 #endif

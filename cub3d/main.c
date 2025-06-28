@@ -6,40 +6,27 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/27 20:01:05 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 11:09:14 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-int parse(int ac)
+int parse(int ac, char **av)
 {
 	if (ac != 2)
 		return (printf("Usage: ./cub3D FILE.CUB !\n"), exit(1), 0);
-	return (1);
-}
-
-int linelen(char **av)
-{
-	int j;
-	size_t len;
-	char *line;
-
-	j = open(av[1], O_RDONLY);
-	if (j == -1)
-		return (printf("Invalid CUB File !\n"), exit(1), 0);
-	len = 0;
-	while ((line = get_next_line(j)) != NULL)
+	if (ft_strlen(av[1]) <= 4)
+		return (printf("File Extension Should be .CUB !\n"), exit(1), 0);
+	else
 	{
-		if (ft_strlen(line) > len)
-			len = ft_strlen(line);
-		free(line);
+		if (!ft_strncmp(av[1] + (ft_strlen(av[1]) - 4), ".cub", 4))
+			return (1);
+		return (printf("File Extension Should be .CUB !\n"), exit(1), 0);
 	}
-	close(j);
-	return (len);
 }
 
-int doublearraylen(char **av)
+void	doublearraylen(char **av, t_data *data)
 {
 	int j;
 	char *line;
@@ -47,7 +34,10 @@ int doublearraylen(char **av)
 	
 	j = open(av[1], O_RDONLY);
 	if (j == -1)
-		return (printf("Invalid CUB File !\n"), exit(1), 0);
+	{
+		printf("Invalid CUB File !\n");
+		exit(1);
+	}
 	len = 0;
 	while ((line = get_next_line(j)) != NULL)
 	{
@@ -55,7 +45,7 @@ int doublearraylen(char **av)
 		free(line);
 	}
 	close(j);
-	return (len);
+	data->len = len;
 }
 
 int	extractcubfile(t_data *data, char **av)
@@ -64,15 +54,15 @@ int	extractcubfile(t_data *data, char **av)
 	char *line;
 	int k;
 
-	data->cubfile = malloc((doublearraylen(av) + 1) * sizeof(char *));
+	data->cubfile = malloc((data->len + 1) * sizeof(char *));
 	k = 0;
 	j = open(av[1], O_RDONLY);
 	if (j == -1)
 		return (printf("Invalid CUB File !\n"), exit(1), 0);
 	while ((line = get_next_line(j)))
 	{
-		data->cubfile[k] = malloc(ft_strlen(line));
-		ft_strlcpy(data->cubfile[k], line, ft_strlen(line));
+		data->cubfile[k] = malloc(ft_strlen(line) + 1);
+		ft_strlcpy(data->cubfile[k], line, ft_strlen(line) + 1);
 		k++;
 	}
 	data->cubfile[k] = NULL;
@@ -80,26 +70,26 @@ int	extractcubfile(t_data *data, char **av)
 	return (1);
 }
 
-int gettextures(char **av, t_data *data, char **file)
+int gettextures(t_data *data)
 {
 	int		i;
 	int		k;
 	int		start;
 
-	data->textures = malloc(sizeof(char *) * (doublearraylen(av) + 1));
+	data->textures = malloc(sizeof(char *) * (data->len + 1));
 	start = 0;
 	k = 0;
 	i = 0;
-	while (file[i])
+	while (data->cubfile[i])
 	{
-		if (!ft_strncmp(file[i], "NO ", 3) || !ft_strncmp(file[i], "SO ", 3) ||
-			!ft_strncmp(file[i], "WE ", 3) || !ft_strncmp(file[i], "EA ", 3))
+		if (!ft_strncmp(data->cubfile[i], "NO ", 3) || !ft_strncmp(data->cubfile[i], "SO ", 3) ||
+			!ft_strncmp(data->cubfile[i], "WE ", 3) || !ft_strncmp(data->cubfile[i], "EA ", 3))
 		{
-			data->textures[k] = ft_substr(file[i], start + 3, ft_strlen(file[i]) - 3);
+			data->textures[k] = ft_substr(data->cubfile[i], start + 3, ft_strlen(data->cubfile[i]) - 3);
 			k++;
 		}
 		else
-			return (-1);
+			break ;
 		i++;
 	}
 	data->textures[k] = NULL;
@@ -113,18 +103,24 @@ void createwindow(t_mlx *mlx)
 	mlx_loop(mlx->win);
 }
 
+void parsedata(int ac, char **av, t_data *data)
+{
+	parse(ac, av);
+	doublearraylen(av, data);
+	extractcubfile(data, av);
+	getmap(data);
+	gettextures(data);
+	getceiling(data);
+	getfloor(data);
+}
+
+
 int main(int ac, char **av)
 {
 	// t_mlx win;
 	t_data data;
 
-	(void)ac;
-	extractcubfile(&data, av);
-	int i = 0;
-	while (data.cubfile[i])
-	{
-		printf("%s", data.cubfile[i]);
-		i++;
-	}
+	parsedata(ac, av, &data);
+	// createwindow(&win);
 }
 	
