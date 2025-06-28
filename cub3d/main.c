@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 19:30:12 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 20:01:35 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,14 +152,8 @@ void parsedata(int ac, char **av, t_data *data)
 	doublearraylen(av, data);
 	extractcubfile(data, av);
 	getmap(data);
-	if (!validatemap(data) || validatemap(data) == -1)
+	if (!validatemap(data))
 	{
-		if (validatemap(data) == -1)
-		{
-			printf("Malloc Error !\n");
-			ft_exit(data);
-		}
-		printf("Invalid Map !\n");
 		ft_exit(data);
 	}
 	if (!validateinside(data))

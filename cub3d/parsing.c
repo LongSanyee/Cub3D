@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 08:54:54 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 19:37:32 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 20:09:13 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,9 +198,10 @@ int validatemap(t_data *data)
 	int flag;
 
 	if (!validatepadding(data))
+	{
+		printf("malloc");
 		return (-1);
-	if (!validatewalls(data))
-		return (0);
+	}
 	i = 0;
 	flag = 0;
 	while (data->map[i])
@@ -223,73 +224,30 @@ int validatemap(t_data *data)
 	return (1);
 }
 
-int checkfirstlast(char *str)
-{
-	int		i;
-	int		last;
-	
-	i = 0;
-	last = ft_strlen(str) - 1;
-
-	while (last >= 0 && str[last] == ' ')
-		last--;
-	if (last <= 0 || str[last] != '1')
-		return (0);
-	while (i < last)
-	{
-		if (str[i] != '1')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-	
-int validatewalls(t_data *data)
-{
-	size_t	i;
-	int		last;
-	
-	i = 1;
-	if (!checkfirstlast(data->map[0]) || !checkfirstlast(data->map[data->k - 1]))
-		return (0);
-	while (i < data->k)
-	{
-		last = ft_strlen(data->map[i]) - 1;
-		while (last >= 0 && data->map[i][last] == ' ')
-			last--;
-		if (last <= 0)
-			return (0);
-		if (data->map[i][last] != '1' || data->map[i][0] != '1')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 int validateinside(t_data *data)
 {
 	size_t y;
 	size_t x;
 	char	c;
 	
-	x = -1;
-	while (data->map[++x])
+	x = 0;
+	while (data->map[x])
 	{
-		if (x != 0 && x != data->k - 1)
+		y = 0;
+		while (data->map[x][y])
 		{
-			y = -1;
-			while (data->map[x][++y])
+			c = data->map[x][y];
+			if (c == '0' || isplayer(c))
 			{
-				c = data->map[x][y];
-				if (c == '0' || isplayer(c))
-				{
-					if (data->map[x - 1][y] == ' ' || data->map[x + 1][y] == ' ')
-						return (0);
-					if ((y > 0 && data->map[x][y - 1] == ' ') || data->map[x][y + 1] == ' ')
-						return (0);
-				}
+				if ((x > 0 && data->map[x - 1][y] == ' ')
+					|| (x < data->k - 1 && data->map[x + 1][y] == ' ')
+					|| (y > 0 && data->map[x][y - 1] == ' ')
+					|| (data->map[x][y + 1] && data->map[x][y + 1] == ' '))
+					return (0);
 			}
+			y++;
 		}
+		x++;
 	}
 	return (1);
 }
