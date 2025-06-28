@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 08:54:54 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 20:09:13 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 21:01:24 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int getmap(t_data *data)
 				k++;
 			}
 			if (flag == 1 && !ft_strchr(data->cubfile[i], '1'))
-				return (printf("Invalid MAP !\n"), exit(0), 0);
+				return (printf("Invalid MAP !\n"), ft_exit(data), 0);
 		}
 		i++;
 	}
@@ -197,11 +197,6 @@ int validatemap(t_data *data)
 	int j;
 	int flag;
 
-	if (!validatepadding(data))
-	{
-		printf("malloc");
-		return (-1);
-	}
 	i = 0;
 	flag = 0;
 	while (data->map[i])

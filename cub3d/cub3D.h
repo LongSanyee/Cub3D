@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 19:21:29 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 20:23:22 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ char	*ft_strchr(const char *s, int c);
 char    *ft_strtrim(char *s1, char *set);
 int validatepadding(t_data *data);
 int validatemap(t_data *data);
-int validatewalls(t_data *data);
+void ft_exit(t_data *data);
 int validateinside(t_data *data);
+void freedoublearr(char **arr);
 
 #endif
