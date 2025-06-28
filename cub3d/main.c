@@ -6,11 +6,31 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 11:57:59 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 14:54:07 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
+void freedoublearr(char **arr)
+{
+	int i;
+
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+
+void freeeverything(t_data *data)
+{
+	freedoublearr(data->map);
+	freedoublearr(data->cubfile);
+	freedoublearr(data->textures);
+}
 
 int parse(int ac, char **av)
 {
@@ -66,6 +86,7 @@ int	extractcubfile(t_data *data, char **av)
 		if (data->cubfile[k][ft_strlen(data->cubfile[k]) - 1] == '\n')
 			data->cubfile[k][ft_strlen(data->cubfile[k]) - 1] = '\0';
 		k++;
+		free(line);
 	}
 	data->cubfile[k] = NULL;
 	close(j);
@@ -98,10 +119,23 @@ int gettextures(t_data *data)
 	return (1);
 }
 
+int xbutton(void *param)
+{
+	t_mlx *mlx = (t_mlx *)param;
+
+	freeeverything(&mlx->data);
+	mlx_destroy_window(mlx->win, mlx->mlxwin);
+	mlx_destroy_display(mlx->win);
+	free(mlx->win);
+	exit(0);
+	return (0);
+}
+
 void createwindow(t_mlx *mlx)
 {
 	mlx->win = mlx_init();
 	mlx->mlxwin = mlx_new_window(mlx->win, WIDTH, LENGTH, "CUB3D");
+	mlx_hook(mlx->mlxwin, 17, 0, xbutton, mlx);
 	mlx_loop(mlx->win);
 }
 
@@ -119,10 +153,9 @@ void parsedata(int ac, char **av, t_data *data)
 
 int main(int ac, char **av)
 {
-	// t_mlx win;
-	t_data data;
+	t_mlx win;
 
-	parsedata(ac, av, &data);
+	parsedata(ac, av, &win.data);
 	// createwindow(&win);
 }
 	

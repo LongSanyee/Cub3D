@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 11:53:28 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 14:08:54 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,16 @@
 #define WIDTH 800
 #define LENGTH 600
 
+typedef struct	s_data
+{
+	char	**map;
+	size_t	len;
+	char	**cubfile;
+	char	**textures;
+	int		ceiling[3];
+	int		floor[3];
+}	t_data;
+
 typedef struct s_grid
 {
 	int y;
@@ -38,19 +48,11 @@ typedef struct	s_mlx
 {
 	void	*win;
 	void	*mlxwin;
+	t_data data;
 	void	*img;
 	
 } t_mlx;
 
-typedef struct	s_data
-{
-	char	**map;
-	size_t	len;
-	char	**cubfile;
-	char	**textures;
-	int		ceiling[3];
-	int		floor[3];
-}	t_data;
 
 char	*get_next_line(int fd);
 char	*ft_strjoin(char *s1, const char *s2);
