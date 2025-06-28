@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 14:08:54 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 19:21:29 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct	s_data
 {
 	char	**map;
 	size_t	len;
+	size_t	k;
 	char	**cubfile;
 	char	**textures;
 	int		ceiling[3];
@@ -69,5 +70,9 @@ int getfloor(t_data *data);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strchr(const char *s, int c);
 char    *ft_strtrim(char *s1, char *set);
+int validatepadding(t_data *data);
+int validatemap(t_data *data);
+int validatewalls(t_data *data);
+int validateinside(t_data *data);
 
 #endif

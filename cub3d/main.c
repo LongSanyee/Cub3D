@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 14:54:07 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/28 19:30:12 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,12 +139,34 @@ void createwindow(t_mlx *mlx)
 	mlx_loop(mlx->win);
 }
 
+void ft_exit(t_data *data)
+{
+	freedoublearr(data->map);
+	freedoublearr(data->cubfile);
+	exit(1);
+}
+
 void parsedata(int ac, char **av, t_data *data)
 {
 	parse(ac, av);
 	doublearraylen(av, data);
 	extractcubfile(data, av);
 	getmap(data);
+	if (!validatemap(data) || validatemap(data) == -1)
+	{
+		if (validatemap(data) == -1)
+		{
+			printf("Malloc Error !\n");
+			ft_exit(data);
+		}
+		printf("Invalid Map !\n");
+		ft_exit(data);
+	}
+	if (!validateinside(data))
+	{
+		printf("Invalid Map !\n");
+		ft_exit(data);
+	}
 	gettextures(data);
 	getceiling(data);
 	getfloor(data);
