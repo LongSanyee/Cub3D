@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 08:54:54 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 21:01:24 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/29 19:15:32 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,9 @@ int getfloor(t_data *data)
 
 int isnotmap(char *str)
 {
-	if (!ft_strncmp(str, "NO ", 3) || !ft_strncmp(str, "SO ", 3) ||
-		!ft_strncmp(str, "WE ", 3) || !ft_strncmp(str, "EA ", 3) ||
-		!ft_strncmp(str, "F ", 2) || !ft_strncmp(str, "C ", 2))
+	if (!ft_strncmp(str, "NO", 2) || !ft_strncmp(str, "SO", 2) ||
+		!ft_strncmp(str, "WE", 2) || !ft_strncmp(str, "EA", 2) ||
+		!ft_strncmp(str, "F", 1) || !ft_strncmp(str, "C", 1))
 		return (1);
 	return (0);
 }
@@ -108,16 +108,15 @@ int getmap(t_data *data)
 		return (0);
 	while (data->cubfile[i])
 	{
-		if (!isnotmap(data->cubfile[i]))
+		if (!isnotmap(data->cubfile[i]) && data->cubfile[i][0] != '\0')
 		{
-			if (ft_strchr(data->cubfile[i], '1'))
+			if (ft_strchr(data->cubfile[i], '1') || ft_strchr(data->cubfile[i], '0'))
 			{
 				flag = 1;
-				data->map[k] = malloc(ft_strlen(data->cubfile[i]) + 1);
-				ft_strlcpy(data->map[k], data->cubfile[i], ft_strlen(data->cubfile[i]) + 1);
+				data->map[k] = ft_strdup(data->cubfile[i]);
 				k++;
 			}
-			if (flag == 1 && !ft_strchr(data->cubfile[i], '1'))
+			else if (flag == 1)
 				return (printf("Invalid MAP !\n"), ft_exit(data), 0);
 		}
 		i++;
@@ -237,7 +236,7 @@ int validateinside(t_data *data)
 				if ((x > 0 && data->map[x - 1][y] == ' ')
 					|| (x < data->k - 1 && data->map[x + 1][y] == ' ')
 					|| (y > 0 && data->map[x][y - 1] == ' ')
-					|| (data->map[x][y + 1] && data->map[x][y + 1] == ' '))
+					|| (!data->map[x][y + 1] || data->map[x][y + 1] == ' '))
 					return (0);
 			}
 			y++;

@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 20:23:22 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/29 19:41:28 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #  define BUFFER_SIZE 42
 # endif
 
+# define TILE 21
+
 # include "minilibx/mlx.h"
 # include <stdio.h>
 # include <fcntl.h>
@@ -26,7 +28,7 @@
 # include <stdlib.h>
 
 #define WIDTH 800
-#define LENGTH 600
+#define HEIGHT 600
 
 typedef struct	s_data
 {
@@ -47,11 +49,16 @@ typedef struct s_grid
 
 typedef struct	s_mlx
 {
-	void	*win;
+	void	*mlx;
 	void	*mlxwin;
-	t_data data;
 	void	*img;
-	
+	int		img_width;
+	int		img_height;
+	int 	bpp;
+	int		linelength;
+	int		endian;
+	void	*addr;
+	t_data data;
 } t_mlx;
 
 
@@ -75,5 +82,7 @@ int validatemap(t_data *data);
 void ft_exit(t_data *data);
 int validateinside(t_data *data);
 void freedoublearr(char **arr);
+int longestline(t_data *data);
+int isplayer(char c);
 
 #endif

@@ -6,11 +6,13 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/28 20:26:48 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/29 20:37:42 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
+
 
 void freedoublearr(char **arr)
 {
@@ -105,10 +107,10 @@ int gettextures(t_data *data)
 	i = 0;
 	while (data->cubfile[i])
 	{
-		if (!ft_strncmp(data->cubfile[i], "NO ", 3) || !ft_strncmp(data->cubfile[i], "SO ", 3) ||
-			!ft_strncmp(data->cubfile[i], "WE ", 3) || !ft_strncmp(data->cubfile[i], "EA ", 3))
+		if (!ft_strncmp(data->cubfile[i], "NO", 2) || !ft_strncmp(data->cubfile[i], "SO", 2) ||
+			!ft_strncmp(data->cubfile[i], "WE", 2) || !ft_strncmp(data->cubfile[i], "EA", 2))
 		{
-			data->textures[k] = ft_substr(data->cubfile[i], start + 3, ft_strlen(data->cubfile[i]) - 3);
+			data->textures[k] = ft_substr(data->cubfile[i], start + 2, ft_strlen(data->cubfile[i]) - 3);
 			k++;
 		}
 		else
@@ -124,19 +126,137 @@ int xbutton(void *param)
 	t_mlx *mlx = (t_mlx *)param;
 
 	freeeverything(&mlx->data);
-	mlx_destroy_window(mlx->win, mlx->mlxwin);
-	mlx_destroy_display(mlx->win);
-	free(mlx->win);
+	mlx_destroy_window(mlx->mlx, mlx->mlxwin);
+	mlx_destroy_display(mlx->mlx);
+	free(mlx->mlx);
 	exit(0);
 	return (0);
 }
 
-void createwindow(t_mlx *mlx)
+void	put_pixel(t_mlx *mlx, int x, int y, int color)
 {
-	mlx->win = mlx_init();
-	mlx->mlxwin = mlx_new_window(mlx->win, WIDTH, LENGTH, "CUB3D");
-	mlx_hook(mlx->mlxwin, 17, 0, xbutton, mlx);
-	mlx_loop(mlx->win);
+	char	*dst;
+
+	dst = mlx->addr + (y * mlx->linelength + x * (mlx->bpp / 8));
+	*(unsigned int *)dst = color;
+}
+
+void draw_square(t_mlx *img, int map_x, int map_y, int color)
+{
+	size_t x, y;
+	int start_x = map_x * TILE;
+	int start_y = map_y * TILE;
+
+	y = 0;
+	while (y < TILE)
+	{
+		x = 0;
+		while (x < TILE)
+		{
+			put_pixel(img, start_x + x, start_y + y, color);
+			x++;
+		}
+		y++;
+	}
+}
+
+void keyhelp(t_mlx *mlx, int flag)
+{
+	int x;
+	char temp;
+	int y;	
+
+	
+	y = 0;
+	while (mlx->data.map[y])
+	{
+		x = 0;
+		while (mlx->data.map[y][x])
+		{
+			if (isplayer(mlx->data.map[y][x]))
+			{
+				if (flag == 1)
+				{
+					if (mlx->data.map[y - 1][x] != '1')
+					{
+						temp = mlx->data.map[y][x];
+						mlx->data.map[y][x] = mlx->data.map[y - 1][x];
+						mlx->data.map[y - 1][x] = temp;
+					}
+				}
+				else if (flag == 2)
+				{
+					if (mlx->data.map[y + 1][x] != '1')
+					{
+						temp = mlx->data.map[y][x];
+						mlx->data.map[y][x] = mlx->data.map[y + 1][x];
+						mlx->data.map[y + 1][x] = temp;
+					}
+				}
+				else if (flag == 4)
+				{
+					if (mlx->data.map[y][x + 1] != '1')
+					{
+						temp = mlx->data.map[y][x];
+						mlx->data.map[y][x] = mlx->data.map[y][x + 1];
+						mlx->data.map[y][x + 1] = temp;
+					}
+				}
+				else if (flag == 3)
+				{
+					if (mlx->data.map[y][x - 1] != '1')
+					{
+						temp = mlx->data.map[y][x];
+						mlx->data.map[y][x] = mlx->data.map[y][x - 1];
+						mlx->data.map[y][x - 1] = temp;
+					}
+				}
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+int key_handler(int keycode, void *param)
+{
+	t_mlx *mlx = (t_mlx *)param;
+
+	if (keycode == 65307)
+		exit(0);
+	else if (keycode == 119)
+		keyhelp(mlx, 1);
+	else if (keycode == 115)
+		keyhelp(mlx, 2);
+	else if (keycode == 97)
+		keyhelp(mlx, 3);
+	else if (keycode == 100)
+		keyhelp(mlx, 4);
+	return (0);
+}
+
+int	createwindow(t_mlx *mlx)
+{
+	int x;
+	int y;
+	y = 0;
+	while (mlx->data.map[y])
+	{
+		x = 0;
+		while (mlx->data.map[y][x])
+		{
+			if (mlx->data.map[y][x] == '1')
+				draw_square(mlx, x, y, 0x000000);
+			else if (mlx->data.map[y][x] == '0')
+				draw_square(mlx, x, y, 0xFFFFFF);
+			else if (isplayer(mlx->data.map[y][x]))
+				draw_square(mlx, x, y, 0xFF0000);
+			x++;
+		}
+		y++;
+	}
+	mlx_put_image_to_window(mlx->mlx, mlx->mlxwin, mlx->img, 0, 0);
+	return (0);
 }
 
 void ft_exit(t_data *data)
@@ -157,9 +277,7 @@ void parsedata(int ac, char **av, t_data *data)
 		printf("Malloc Error !\n");
 		ft_exit(data);
 	}
-	if (!validatemap(data))
-		ft_exit(data);
-	if (!validateinside(data))
+	if (!validatemap(data) || !validateinside(data))
 	{
 		printf("Invalid Map !\n");
 		ft_exit(data);
@@ -174,6 +292,14 @@ int main(int ac, char **av)
 	t_mlx win;
 
 	parsedata(ac, av, &win.data);
-	// createwindow(&win);
+	win.mlx = mlx_init();
+	win.mlxwin = mlx_new_window(win.mlx, WIDTH, HEIGHT, "CUB3D");
+	win.img = mlx_new_image(win.mlx, longestline(&win.data) * TILE, win.data.k * TILE);
+	win.addr = mlx_get_data_addr(win.img, &win.bpp, &win.linelength, &win.endian);
+	mlx_put_image_to_window(win.mlx, win.mlxwin, win.img, 0, 0);
+	mlx_hook(win.mlxwin, 17, 0, xbutton, &win);
+	mlx_loop_hook(win.mlx, createwindow, &win);
+	mlx_key_hook(win.mlxwin, key_handler, &win);
+	mlx_loop(win.mlx);
 }
 	
