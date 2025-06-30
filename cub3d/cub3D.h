@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/29 19:41:28 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:23:22 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #  define BUFFER_SIZE 42
 # endif
 
-# define TILE 21
+# define TILE 50
 
 # include "minilibx/mlx.h"
 # include <stdio.h>
@@ -41,11 +41,12 @@ typedef struct	s_data
 	int		floor[3];
 }	t_data;
 
-typedef struct s_grid
+typedef struct s_player
 {
-	int y;
-	int x;
-}	t_grid;
+	int	x;
+	int	y;
+	
+}	t_player;
 
 typedef struct	s_mlx
 {
@@ -59,6 +60,7 @@ typedef struct	s_mlx
 	int		endian;
 	void	*addr;
 	t_data data;
+	t_player player;
 } t_mlx;
 
 

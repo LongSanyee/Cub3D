@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/29 20:37:42 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:05:03 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,15 +121,18 @@ int gettextures(t_data *data)
 	return (1);
 }
 
-int xbutton(void *param)
+void cleanexit(t_mlx *mlx)
 {
-	t_mlx *mlx = (t_mlx *)param;
-
 	freeeverything(&mlx->data);
 	mlx_destroy_window(mlx->mlx, mlx->mlxwin);
 	mlx_destroy_display(mlx->mlx);
 	free(mlx->mlx);
 	exit(0);
+}
+
+int xbutton(t_mlx *mlx)
+{
+	cleanexit(mlx);
 	return (0);
 }
 
@@ -139,124 +142,6 @@ void	put_pixel(t_mlx *mlx, int x, int y, int color)
 
 	dst = mlx->addr + (y * mlx->linelength + x * (mlx->bpp / 8));
 	*(unsigned int *)dst = color;
-}
-
-void draw_square(t_mlx *img, int map_x, int map_y, int color)
-{
-	size_t x, y;
-	int start_x = map_x * TILE;
-	int start_y = map_y * TILE;
-
-	y = 0;
-	while (y < TILE)
-	{
-		x = 0;
-		while (x < TILE)
-		{
-			put_pixel(img, start_x + x, start_y + y, color);
-			x++;
-		}
-		y++;
-	}
-}
-
-void keyhelp(t_mlx *mlx, int flag)
-{
-	int x;
-	char temp;
-	int y;	
-
-	
-	y = 0;
-	while (mlx->data.map[y])
-	{
-		x = 0;
-		while (mlx->data.map[y][x])
-		{
-			if (isplayer(mlx->data.map[y][x]))
-			{
-				if (flag == 1)
-				{
-					if (mlx->data.map[y - 1][x] != '1')
-					{
-						temp = mlx->data.map[y][x];
-						mlx->data.map[y][x] = mlx->data.map[y - 1][x];
-						mlx->data.map[y - 1][x] = temp;
-					}
-				}
-				else if (flag == 2)
-				{
-					if (mlx->data.map[y + 1][x] != '1')
-					{
-						temp = mlx->data.map[y][x];
-						mlx->data.map[y][x] = mlx->data.map[y + 1][x];
-						mlx->data.map[y + 1][x] = temp;
-					}
-				}
-				else if (flag == 4)
-				{
-					if (mlx->data.map[y][x + 1] != '1')
-					{
-						temp = mlx->data.map[y][x];
-						mlx->data.map[y][x] = mlx->data.map[y][x + 1];
-						mlx->data.map[y][x + 1] = temp;
-					}
-				}
-				else if (flag == 3)
-				{
-					if (mlx->data.map[y][x - 1] != '1')
-					{
-						temp = mlx->data.map[y][x];
-						mlx->data.map[y][x] = mlx->data.map[y][x - 1];
-						mlx->data.map[y][x - 1] = temp;
-					}
-				}
-			}
-			x++;
-		}
-		y++;
-	}
-}
-
-int key_handler(int keycode, void *param)
-{
-	t_mlx *mlx = (t_mlx *)param;
-
-	if (keycode == 65307)
-		exit(0);
-	else if (keycode == 119)
-		keyhelp(mlx, 1);
-	else if (keycode == 115)
-		keyhelp(mlx, 2);
-	else if (keycode == 97)
-		keyhelp(mlx, 3);
-	else if (keycode == 100)
-		keyhelp(mlx, 4);
-	return (0);
-}
-
-int	createwindow(t_mlx *mlx)
-{
-	int x;
-	int y;
-	y = 0;
-	while (mlx->data.map[y])
-	{
-		x = 0;
-		while (mlx->data.map[y][x])
-		{
-			if (mlx->data.map[y][x] == '1')
-				draw_square(mlx, x, y, 0x000000);
-			else if (mlx->data.map[y][x] == '0')
-				draw_square(mlx, x, y, 0xFFFFFF);
-			else if (isplayer(mlx->data.map[y][x]))
-				draw_square(mlx, x, y, 0xFF0000);
-			x++;
-		}
-		y++;
-	}
-	mlx_put_image_to_window(mlx->mlx, mlx->mlxwin, mlx->img, 0, 0);
-	return (0);
 }
 
 void ft_exit(t_data *data)
@@ -287,19 +172,121 @@ void parsedata(int ac, char **av, t_data *data)
 	getfloor(data);
 }
 
+int createmap(t_mlx *mlx)
+{
+	int x;
+	int y;
+
+	y = 0;
+	while (mlx->data.map[y])
+	{
+		x = 0;
+		while (mlx->data.map[y][x])
+		{
+			if (isplayer(mlx->data.map[y][x]))
+			{
+				mlx->player.x = x;
+				mlx->player.y = y;
+				mlx->data.map[y][x] = '0';
+			}
+			x++;
+		}
+		y++;
+	}
+	return (0);
+}
+
+void drawtile(int k, int j, int color, t_mlx *mlx, int flag)
+{
+	int x;
+	int y;
+	int middlex;
+	int middley;
+
+	y = k;
+	middley = y + (TILE / 2);
+	while (y < k + TILE)
+	{
+		x = j;
+		middlex = x + (TILE / 2);
+		while (x < j + TILE)
+		{
+			if (x == middlex && y == middley && flag)
+				put_pixel(mlx, x, y, 0xFF0000);
+			else
+				put_pixel(mlx, x, y, color);
+			x++;
+		}
+		y++;
+	}
+}
+
+int drawmap(t_mlx *mlx)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (mlx->data.map[y])
+	{
+		x = 0;
+		while (mlx->data.map[y][x])
+		{
+			if (x == mlx->player.x && y == mlx->player.y)
+				drawtile(y * TILE, x * TILE, 0xFFFFFF, mlx, 1);
+			else
+			{
+				if (mlx->data.map[y][x] == '1')
+					drawtile(y * TILE, x * TILE, 0x0, mlx, 0);
+				else if (mlx->data.map[y][x] == '0')
+					drawtile(y * TILE, x * TILE, 0xFFFFFF, mlx, 0);
+			}
+			x++;
+		}
+		y++;
+	}
+	mlx_put_image_to_window(mlx->mlx, mlx->mlxwin, mlx->img, 0, 0);
+	return (0);
+}
+
+int handlekeys(int keycode, t_mlx *mlx)
+{
+	int plrx;
+	int plry;
+	
+	plrx = mlx->player.x;
+	plry = mlx->player.y;
+	if (keycode == 65307)
+		cleanexit(mlx);
+	else if (keycode == 119 && mlx->data.map[plry - 1][plrx] != '1')
+		mlx->player.y -= 1;
+	else if (keycode == 115 && mlx->data.map[plry + 1][plrx] != '1')
+		mlx->player.y += 1;
+	else if (keycode == 97 && mlx->data.map[plry][plrx - 1] != '1')
+		mlx->player.x -= 1;
+	else if (keycode == 100 && mlx->data.map[plry][plrx + 1] != '1')
+		mlx->player.x += 1;
+	return (0);
+}
+
+void render(t_mlx *win)
+{
+	win->mlx = mlx_init();
+	win->mlxwin = mlx_new_window(win->mlx, longestline(&win->data) * TILE, win->data.k * TILE, "CUB3D");
+	win->img = mlx_new_image(win->mlx, longestline(&win->data) * TILE, win->data.k * TILE);
+	win->addr = mlx_get_data_addr(win->img, &win->bpp, &win->linelength, &win->endian);
+	mlx_hook(win->mlxwin, 17, 0, xbutton, win);
+	mlx_key_hook(win->mlxwin, handlekeys, win);
+	mlx_loop_hook(win->mlx, drawmap, win);
+	mlx_loop(win->mlx);
+}
+
 int main(int ac, char **av)
 {
 	t_mlx win;
 
 	parsedata(ac, av, &win.data);
-	win.mlx = mlx_init();
-	win.mlxwin = mlx_new_window(win.mlx, WIDTH, HEIGHT, "CUB3D");
-	win.img = mlx_new_image(win.mlx, longestline(&win.data) * TILE, win.data.k * TILE);
-	win.addr = mlx_get_data_addr(win.img, &win.bpp, &win.linelength, &win.endian);
-	mlx_put_image_to_window(win.mlx, win.mlxwin, win.img, 0, 0);
-	mlx_hook(win.mlxwin, 17, 0, xbutton, &win);
-	mlx_loop_hook(win.mlx, createwindow, &win);
-	mlx_key_hook(win.mlxwin, key_handler, &win);
-	mlx_loop(win.mlx);
+	createmap(&win);
+	render(&win);
 }
 	
