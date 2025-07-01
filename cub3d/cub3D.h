@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/30 17:23:22 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/07/01 10:23:33 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #  define BUFFER_SIZE 42
 # endif
 
-# define TILE 50
+# define TILE 20
 
 # include "minilibx/mlx.h"
 # include <stdio.h>
@@ -43,8 +43,8 @@ typedef struct	s_data
 
 typedef struct s_player
 {
-	int	x;
-	int	y;
+	double	x;
+	double	y;
 	
 }	t_player;
 

@@ -6,13 +6,11 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/30 17:05:03 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/07/01 10:29:24 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-
-
 
 void freedoublearr(char **arr)
 {
@@ -185,8 +183,8 @@ int createmap(t_mlx *mlx)
 		{
 			if (isplayer(mlx->data.map[y][x]))
 			{
-				mlx->player.x = x;
-				mlx->player.y = y;
+				mlx->player.x = x + 0.5;
+				mlx->player.y = y + 0.5;
 				mlx->data.map[y][x] = '0';
 			}
 			x++;
@@ -232,15 +230,13 @@ int drawmap(t_mlx *mlx)
 		x = 0;
 		while (mlx->data.map[y][x])
 		{
-			if (x == mlx->player.x && y == mlx->player.y)
-				drawtile(y * TILE, x * TILE, 0xFFFFFF, mlx, 1);
-			else
-			{
 				if (mlx->data.map[y][x] == '1')
 					drawtile(y * TILE, x * TILE, 0x0, mlx, 0);
 				else if (mlx->data.map[y][x] == '0')
 					drawtile(y * TILE, x * TILE, 0xFFFFFF, mlx, 0);
-			}
+			int px = (int)(mlx->player.x * TILE);
+			int py = (int)(mlx->player.y * TILE);
+			put_pixel(mlx, px, py, 0xFF0000);
 			x++;
 		}
 		y++;
@@ -251,21 +247,23 @@ int drawmap(t_mlx *mlx)
 
 int handlekeys(int keycode, t_mlx *mlx)
 {
-	int plrx;
-	int plry;
+	double plrx;
+	double speed;
+	double plry;
 	
 	plrx = mlx->player.x;
 	plry = mlx->player.y;
+	speed = 0.3;
 	if (keycode == 65307)
 		cleanexit(mlx);
-	else if (keycode == 119 && mlx->data.map[plry - 1][plrx] != '1')
-		mlx->player.y -= 1;
-	else if (keycode == 115 && mlx->data.map[plry + 1][plrx] != '1')
-		mlx->player.y += 1;
-	else if (keycode == 97 && mlx->data.map[plry][plrx - 1] != '1')
-		mlx->player.x -= 1;
-	else if (keycode == 100 && mlx->data.map[plry][plrx + 1] != '1')
-		mlx->player.x += 1;
+	else if (keycode == 119 && mlx->data.map[(int)(plry - speed)][(int)plrx] != '1')
+		mlx->player.y -= speed;
+	else if (keycode == 115 && mlx->data.map[(int)(plry + speed)][(int)plrx] != '1')
+		mlx->player.y += speed;
+	else if (keycode == 97 && mlx->data.map[(int)plry][(int)(plrx - speed)] != '1')
+		mlx->player.x -= speed;
+	else if (keycode == 100 && mlx->data.map[(int)plry][(int)(plrx + speed)] != '1')
+		mlx->player.x += speed;
 	return (0);
 }
 
