@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/07/01 10:23:33 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:35:47 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,32 @@
 # endif
 
 # define TILE 20
+# define PI 3.14159265359
+# define FOVANGLE = 60 * (PI / 180)
+# define RAYS 320
+
+# define W 13
+# define A 0
+# define S 1
+# define D 2
+# define ESC 53
 
 # include "minilibx/mlx.h"
 # include <stdio.h>
 # include <fcntl.h>
 # include <unistd.h>
+# include <math.h>
 # include <limits.h>
-# include <fcntl.h>
 # include <stdlib.h>
-
-#define WIDTH 800
-#define HEIGHT 600
 
 typedef struct	s_data
 {
 	char	**map;
-	size_t	len;
-	size_t	k;
 	char	**cubfile;
 	char	**textures;
+	size_t	len;
+	size_t	k;
+	size_t	longestline;
 	int		ceiling[3];
 	int		floor[3];
 }	t_data;
@@ -45,7 +52,12 @@ typedef struct s_player
 {
 	double	x;
 	double	y;
-	
+	double angle;
+	int		turndirection;
+	int		walkdirection;
+	double rotationangle;
+	double rotationspeed;
+	double speed;
 }	t_player;
 
 typedef struct	s_mlx

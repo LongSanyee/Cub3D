@@ -6,11 +6,13 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/07/01 10:29:24 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/07/02 15:31:38 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
+
 
 void freedoublearr(char **arr)
 {
@@ -123,7 +125,6 @@ void cleanexit(t_mlx *mlx)
 {
 	freeeverything(&mlx->data);
 	mlx_destroy_window(mlx->mlx, mlx->mlxwin);
-	mlx_destroy_display(mlx->mlx);
 	free(mlx->mlx);
 	exit(0);
 }
@@ -194,20 +195,43 @@ int createmap(t_mlx *mlx)
 	return (0);
 }
 
-void drawtile(int k, int j, int color, t_mlx *mlx, int flag)
+void drawcircle(int y, int x, int color, int rad, t_mlx *mlx)
+{
+	int centery;
+	int centerx;
+	int dx;
+	int dy;
+
+	centery = y - rad;
+	while (centery <= y + rad)
+	{
+		centerx = x - rad;
+		while (centerx <= x + rad)
+		{
+			dx = centerx - x;
+			dy = centery - y;
+			if ((dx * dx + dy * dy) <= (rad * rad))
+				put_pixel(mlx, centerx, centery, color);
+			centerx++;
+		}
+		centery++;
+	}
+}
+
+void drawtile(int oldy, int oldx, int color, t_mlx *mlx, int flag)
 {
 	int x;
 	int y;
 	int middlex;
 	int middley;
 
-	y = k;
+	y = oldy;
 	middley = y + (TILE / 2);
-	while (y < k + TILE)
+	while (y < oldy + TILE)
 	{
-		x = j;
+		x = oldx;
 		middlex = x + (TILE / 2);
-		while (x < j + TILE)
+		while (x < oldx + TILE)
 		{
 			if (x == middlex && y == middley && flag)
 				put_pixel(mlx, x, y, 0xFF0000);
@@ -224,6 +248,7 @@ int drawmap(t_mlx *mlx)
 	int	x;
 	int	y;
 
+	mlx_clear_window(mlx->mlx, mlx->mlxwin);
 	y = 0;
 	while (mlx->data.map[y])
 	{
@@ -234,13 +259,13 @@ int drawmap(t_mlx *mlx)
 					drawtile(y * TILE, x * TILE, 0x0, mlx, 0);
 				else if (mlx->data.map[y][x] == '0')
 					drawtile(y * TILE, x * TILE, 0xFFFFFF, mlx, 0);
-			int px = (int)(mlx->player.x * TILE);
-			int py = (int)(mlx->player.y * TILE);
-			put_pixel(mlx, px, py, 0xFF0000);
 			x++;
 		}
 		y++;
 	}
+	int px = (int)(mlx->player.x * TILE);
+	int py = (int)(mlx->player.y * TILE);
+	drawcircle(py, px, 0xFF0000, 3, mlx);
 	mlx_put_image_to_window(mlx->mlx, mlx->mlxwin, mlx->img, 0, 0);
 	return (0);
 }
@@ -253,30 +278,35 @@ int handlekeys(int keycode, t_mlx *mlx)
 	
 	plrx = mlx->player.x;
 	plry = mlx->player.y;
-	speed = 0.3;
-	if (keycode == 65307)
+	mlx->player.speed = 0.3;
+	speed = mlx->player.speed;
+	if (keycode == ESC)
 		cleanexit(mlx);
-	else if (keycode == 119 && mlx->data.map[(int)(plry - speed)][(int)plrx] != '1')
+	else if (keycode == W && mlx->data.map[(int)(plry - speed)][(int)plrx] != '1')
 		mlx->player.y -= speed;
-	else if (keycode == 115 && mlx->data.map[(int)(plry + speed)][(int)plrx] != '1')
+	else if (keycode == S && mlx->data.map[(int)(plry + speed)][(int)plrx] != '1')
 		mlx->player.y += speed;
-	else if (keycode == 97 && mlx->data.map[(int)plry][(int)(plrx - speed)] != '1')
+	else if (keycode == A && mlx->data.map[(int)plry][(int)(plrx - speed)] != '1')
 		mlx->player.x -= speed;
-	else if (keycode == 100 && mlx->data.map[(int)plry][(int)(plrx + speed)] != '1')
+	else if (keycode == D && mlx->data.map[(int)plry][(int)(plrx + speed)] != '1')
 		mlx->player.x += speed;
 	return (0);
 }
 
 void render(t_mlx *win)
 {
-	win->mlx = mlx_init();
-	win->mlxwin = mlx_new_window(win->mlx, longestline(&win->data) * TILE, win->data.k * TILE, "CUB3D");
-	win->img = mlx_new_image(win->mlx, longestline(&win->data) * TILE, win->data.k * TILE);
-	win->addr = mlx_get_data_addr(win->img, &win->bpp, &win->linelength, &win->endian);
 	mlx_hook(win->mlxwin, 17, 0, xbutton, win);
 	mlx_key_hook(win->mlxwin, handlekeys, win);
 	mlx_loop_hook(win->mlx, drawmap, win);
 	mlx_loop(win->mlx);
+}
+
+void initdata(t_mlx *win)
+{
+	win->mlx = mlx_init();
+	win->mlxwin = mlx_new_window(win->mlx, win->data.longestline * TILE, win->data.k * TILE, "CUB3D");
+	win->img = mlx_new_image(win->mlx, win->data.longestline * TILE, win->data.k * TILE);
+	win->addr = mlx_get_data_addr(win->img, &win->bpp, &win->linelength, &win->endian);
 }
 
 int main(int ac, char **av)
@@ -284,7 +314,7 @@ int main(int ac, char **av)
 	t_mlx win;
 
 	parsedata(ac, av, &win.data);
+	initdata(&win);
 	createmap(&win);
 	render(&win);
 }
-	

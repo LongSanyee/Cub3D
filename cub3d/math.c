@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mlx_destroy_display.c                              :+:      :+:    :+:   */
+/*   math.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mg <mg@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/03 18:56:35 by mg                #+#    #+#             */
-/*   Updated: 2020/10/04 01:55:35 by mg               ###   ########.fr       */
+/*   Created: 2025/07/02 13:23:33 by rammisse          #+#    #+#             */
+/*   Updated: 2025/07/02 14:04:47 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mlx_int.h"
+#include "cub3D.h"
 
-int	mlx_destroy_display(t_xvar *xvar)
+double degtorad(double degree)
 {
-	XCloseDisplay(xvar->display);
+	return (degree * (PI * 180.0));
+}
+
+double radtodegree(double rad)
+{
+	return (rad * (180.0 / PI));
 }

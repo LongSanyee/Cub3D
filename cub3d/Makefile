@@ -1,6 +1,6 @@
 NAME = cub3D
 
-MLX = minilibx/libmlx_Linux.a
+MLX = minilibx/libmlx.a
 
 SRC = main.c get_next_line.c get_next_line_utils.c utils.c parsing.c
 
@@ -14,7 +14,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(MAKE) -C minilibx
-	$(CC) $(CFLAGS) $(OBJ) $(MLX) -lX11 -lXext -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(MLX) -lmlx -framework OpenGL -framework AppKit -lm -o $(NAME)
 
 $(OBJ): %.o: %.c cub3D.h minilibx/mlx.h
 	$(CC) $(CFLAGS) -c $< -o $@

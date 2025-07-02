@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 08:54:54 by rammisse          #+#    #+#             */
-/*   Updated: 2025/06/29 19:15:32 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/07/02 13:55:21 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int getceiling(t_data *data)
 				{
 					data->ceiling[k++] = result;
 					result = 0;
-				}
+				} 
 				j++;
 			}
 			break ;
@@ -152,6 +152,7 @@ int validatepadding(t_data *data)
 
 	i = 0;
 	len = longestline(data);
+	data->longestline = len;
 	while (data->map[i])
 	{
 		if (len > ft_strlen(data->map[i]))
