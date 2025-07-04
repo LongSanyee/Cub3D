@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:16:43 by rammisse          #+#    #+#             */
-/*   Updated: 2025/07/04 16:02:55 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/07/04 19:54:06 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void drawcircle(int y, int x, int color, int rad, t_mlx *mlx)
 	}
 }
 
-void drawtile(int oldy, int oldx, int color, t_mlx *mlx, int flag)
+void drawtile(int oldy, int oldx, int color, t_mlx *mlx)
 {
 	int x;
 	int y;
@@ -95,8 +95,6 @@ void drawtile(int oldy, int oldx, int color, t_mlx *mlx, int flag)
 		{
 			if (x == oldx || x == oldx + TILE - 1 || y == oldy || y == oldy + TILE - 1)
 				put_pixel(mlx, x, y, 0x0);
-			else if (flag && x == oldx + TILE / 2 && y == oldy + TILE / 2)
-				put_pixel(mlx, x, y, 0xFF0000);
 			else
 				put_pixel(mlx, x, y, color);
 			x++;
@@ -116,35 +114,21 @@ int drawmap(t_mlx *mlx)
 		x = 0;
 		while (mlx->data.map[y][x])
 		{
-				if (mlx->data.map[y][x] == '1')
-					drawtile(y * TILE, x * TILE, 0x0, mlx, 0);
-				else if (mlx->data.map[y][x] == '0')
-					drawtile(y * TILE, x * TILE, 0xFFFFFF, mlx, 0);
-			int px = (int)(mlx->player.x * TILE);
-			int py = (int)(mlx->player.y * TILE);
-			drawcircle(py, px, 0xFF0000, 2, mlx);
+			if (mlx->data.map[y][x] == '1')
+				drawtile(y * TILE, x * TILE, 0x0, mlx);
+			else if (mlx->data.map[y][x] == '0')
+				drawtile(y * TILE, x * TILE, 0xFFFFFF, mlx);
 			x++;
 		}
 		y++;
 	}
+	int px = (int)(mlx->player.x * TILE);
+	int py = (int)(mlx->player.y * TILE);
+	drawcircle(py, px, 0xFF0000, 2, mlx);
 	return (0);
 }
 
-int handleturn(int keycode, t_mlx *mlx)
-{
-	if (keycode == UP)
-		mlx->player.walkdirection = +1;
-	else if (keycode == DOWN)
-		mlx->player.walkdirection = -1;
-	else if (keycode == RIGHT)
-		mlx->player.turndirection = +1;
-	else if (keycode == LEFT)
-		mlx->player.turndirection = -1;
-	
-	return (0);
-}
-
-int handlekeys(int keycode, t_mlx *mlx)
+int handlekeys(t_mlx *mlx)
 {
 	double plrx;
 	double speed;
@@ -152,18 +136,15 @@ int handlekeys(int keycode, t_mlx *mlx)
 	
 	plrx = mlx->player.x;
 	plry = mlx->player.y;
-	speed = 0.3;
-	
-	handleturn(keycode, mlx);
-	if (keycode == 65307)
-		cleanexit(mlx);
-	else if (keycode == 119 && mlx->data.map[(int)(plry - speed)][(int)plrx] != '1')
+	speed = 0.03;
+	mlx->player.speed = speed;
+	if (mlx->player.walkdirection == 1 && mlx->data.map[(int)(plry - speed)][(int)plrx] != '1')
 		mlx->player.y -= speed;
-	else if (keycode == 115 && mlx->data.map[(int)(plry + speed)][(int)plrx] != '1')
+	if (mlx->player.walkdirection == -1 && mlx->data.map[(int)(plry + speed)][(int)plrx] != '1')
 		mlx->player.y += speed;
-	else if (keycode == 97 && mlx->data.map[(int)plry][(int)(plrx - speed)] != '1')
+	if (mlx->player.turndirection == 1 && mlx->data.map[(int)plry][(int)(plrx - speed)] != '1')
 		mlx->player.x -= speed;
-	else if (keycode == 100 && mlx->data.map[(int)plry][(int)(plrx + speed)] != '1')
+	if (mlx->player.turndirection == -1 && mlx->data.map[(int)plry][(int)(plrx + speed)] != '1')
 		mlx->player.x += speed;
 	return (0);
 }
@@ -171,6 +152,7 @@ int handlekeys(int keycode, t_mlx *mlx)
 
 int update(t_mlx *mlx)
 {
+	handlekeys(mlx);
     drawmap(mlx);
     mlx_put_image_to_window(mlx->mlx, mlx->mlxwin, mlx->img, 0, 0);
     return(0);
@@ -186,11 +168,38 @@ void initstruct(t_player *player)
 	player->speed = 0.3;
 }
 
+int keypress(int key, t_mlx *mlx)
+{
+	if (key == W)
+		mlx->player.walkdirection = 1;
+	else if (key == S)
+		mlx->player.walkdirection = -1;
+	else if (key == A)
+		mlx->player.turndirection = 1;
+	else if (key == D)
+		mlx->player.turndirection = -1;
+	return (0);
+}
+
+int keyrelease(int key, t_mlx *mlx)
+{
+	if (key == W)
+		mlx->player.walkdirection = 0;
+	else if (key == S)
+		mlx->player.walkdirection = 0;
+	else if (key == A)
+		mlx->player.turndirection = 0;
+	else if (key == D)
+		mlx->player.turndirection = 0;
+	return (0);
+}
+
 void render(t_mlx *win)
 {
 	initstruct(&win->player);
 	mlx_hook(win->mlxwin, 17, 0, xbutton, win);
-	mlx_key_hook(win->mlxwin, handlekeys, win);
+	mlx_hook(win->mlxwin, 2, 1L << 0, keypress, win);
+	mlx_hook(win->mlxwin, 3, 1L << 1, keyrelease, win);
 	mlx_loop_hook(win->mlx, update, win);
 	mlx_loop(win->mlx);
 }
