@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/07/02 14:35:47 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:57:15 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,16 @@
 # define FOVANGLE = 60 * (PI / 180)
 # define RAYS 320
 
-# define W 13
-# define A 0
-# define S 1
-# define D 2
-# define ESC 53
+# define W 119
+# define A 97
+# define S 115
+# define D 100
+# define ESC 65307
+
+# define UP 65362
+# define RIGHT 65363
+# define LEFT 65361
+# define DOWN 65364
 
 # include "minilibx/mlx.h"
 # include <stdio.h>
@@ -58,6 +63,7 @@ typedef struct s_player
 	double rotationangle;
 	double rotationspeed;
 	double speed;
+	int rad;
 }	t_player;
 
 typedef struct	s_mlx
@@ -92,7 +98,10 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strchr(const char *s, int c);
 char    *ft_strtrim(char *s1, char *set);
 int validatepadding(t_data *data);
+void freeeverything(t_data *data);
 int validatemap(t_data *data);
+void render(t_mlx *win);
+int createmap(t_mlx *mlx);
 void ft_exit(t_data *data);
 int validateinside(t_data *data);
 void freedoublearr(char **arr);

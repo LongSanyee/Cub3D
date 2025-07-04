@@ -6,13 +6,11 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/07/02 15:31:38 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:10:41 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-
-
 
 void freedoublearr(char **arr)
 {
@@ -121,28 +119,6 @@ int gettextures(t_data *data)
 	return (1);
 }
 
-void cleanexit(t_mlx *mlx)
-{
-	freeeverything(&mlx->data);
-	mlx_destroy_window(mlx->mlx, mlx->mlxwin);
-	free(mlx->mlx);
-	exit(0);
-}
-
-int xbutton(t_mlx *mlx)
-{
-	cleanexit(mlx);
-	return (0);
-}
-
-void	put_pixel(t_mlx *mlx, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = mlx->addr + (y * mlx->linelength + x * (mlx->bpp / 8));
-	*(unsigned int *)dst = color;
-}
-
 void ft_exit(t_data *data)
 {
 	freedoublearr(data->map);
@@ -169,136 +145,6 @@ void parsedata(int ac, char **av, t_data *data)
 	gettextures(data);
 	getceiling(data);
 	getfloor(data);
-}
-
-int createmap(t_mlx *mlx)
-{
-	int x;
-	int y;
-
-	y = 0;
-	while (mlx->data.map[y])
-	{
-		x = 0;
-		while (mlx->data.map[y][x])
-		{
-			if (isplayer(mlx->data.map[y][x]))
-			{
-				mlx->player.x = x + 0.5;
-				mlx->player.y = y + 0.5;
-				mlx->data.map[y][x] = '0';
-			}
-			x++;
-		}
-		y++;
-	}
-	return (0);
-}
-
-void drawcircle(int y, int x, int color, int rad, t_mlx *mlx)
-{
-	int centery;
-	int centerx;
-	int dx;
-	int dy;
-
-	centery = y - rad;
-	while (centery <= y + rad)
-	{
-		centerx = x - rad;
-		while (centerx <= x + rad)
-		{
-			dx = centerx - x;
-			dy = centery - y;
-			if ((dx * dx + dy * dy) <= (rad * rad))
-				put_pixel(mlx, centerx, centery, color);
-			centerx++;
-		}
-		centery++;
-	}
-}
-
-void drawtile(int oldy, int oldx, int color, t_mlx *mlx, int flag)
-{
-	int x;
-	int y;
-	int middlex;
-	int middley;
-
-	y = oldy;
-	middley = y + (TILE / 2);
-	while (y < oldy + TILE)
-	{
-		x = oldx;
-		middlex = x + (TILE / 2);
-		while (x < oldx + TILE)
-		{
-			if (x == middlex && y == middley && flag)
-				put_pixel(mlx, x, y, 0xFF0000);
-			else
-				put_pixel(mlx, x, y, color);
-			x++;
-		}
-		y++;
-	}
-}
-
-int drawmap(t_mlx *mlx)
-{
-	int	x;
-	int	y;
-
-	mlx_clear_window(mlx->mlx, mlx->mlxwin);
-	y = 0;
-	while (mlx->data.map[y])
-	{
-		x = 0;
-		while (mlx->data.map[y][x])
-		{
-				if (mlx->data.map[y][x] == '1')
-					drawtile(y * TILE, x * TILE, 0x0, mlx, 0);
-				else if (mlx->data.map[y][x] == '0')
-					drawtile(y * TILE, x * TILE, 0xFFFFFF, mlx, 0);
-			x++;
-		}
-		y++;
-	}
-	int px = (int)(mlx->player.x * TILE);
-	int py = (int)(mlx->player.y * TILE);
-	drawcircle(py, px, 0xFF0000, 3, mlx);
-	mlx_put_image_to_window(mlx->mlx, mlx->mlxwin, mlx->img, 0, 0);
-	return (0);
-}
-
-int handlekeys(int keycode, t_mlx *mlx)
-{
-	double plrx;
-	double speed;
-	double plry;
-	
-	plrx = mlx->player.x;
-	plry = mlx->player.y;
-	mlx->player.speed = 0.3;
-	speed = mlx->player.speed;
-	if (keycode == ESC)
-		cleanexit(mlx);
-	else if (keycode == W && mlx->data.map[(int)(plry - speed)][(int)plrx] != '1')
-		mlx->player.y -= speed;
-	else if (keycode == S && mlx->data.map[(int)(plry + speed)][(int)plrx] != '1')
-		mlx->player.y += speed;
-	else if (keycode == A && mlx->data.map[(int)plry][(int)(plrx - speed)] != '1')
-		mlx->player.x -= speed;
-	else if (keycode == D && mlx->data.map[(int)plry][(int)(plrx + speed)] != '1')
-		mlx->player.x += speed;
-	return (0);
-}
-
-void render(t_mlx *win)
-{
-	mlx_hook(win->mlxwin, 17, 0, xbutton, win);
-	mlx_key_hook(win->mlxwin, handlekeys, win);
-	mlx_loop_hook(win->mlx, drawmap, win);
-	mlx_loop(win->mlx);
 }
 
 void initdata(t_mlx *win)
