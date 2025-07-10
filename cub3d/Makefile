@@ -14,7 +14,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(MAKE) -C minilibx
-	$(CC) $(CFLAGS) $(OBJ) $(MLX) -lX11 -lXext -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(MLX) -lX11 -lXext -lm -o $(NAME)
 
 $(OBJ): %.o: %.c cub3D.h minilibx/mlx.h
 	$(CC) $(CFLAGS) -c $< -o $@

@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/07/04 15:57:15 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/07/06 20:52:32 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@
 #  define BUFFER_SIZE 42
 # endif
 
+# define WIDTH 800
+# define HEIGHT 600
+
 # define TILE 20
-# define PI 3.14159265359
+# define PI 3.1415
 # define FOVANGLE = 60 * (PI / 180)
 # define RAYS 320
 
@@ -40,6 +43,7 @@
 # include <math.h>
 # include <limits.h>
 # include <stdlib.h>
+
 
 typedef struct	s_data
 {

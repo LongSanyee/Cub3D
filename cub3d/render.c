@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:16:43 by rammisse          #+#    #+#             */
-/*   Updated: 2025/07/04 19:54:06 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/07/08 21:23:08 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,30 @@ void drawtile(int oldy, int oldx, int color, t_mlx *mlx)
 	}
 }
 
+void drawdirectionline(t_mlx *mlx)
+{
+	int     px = (int)(mlx->player.x * TILE);
+	int     py = (int)(mlx->player.y * TILE);
+	double  angle = mlx->player.rotationangle;
+	double  x1 = px + cos(angle) * 20;
+	double  y1 = py + sin(angle) * 20;
+	double  dx = x1 - px;
+	double  dy = y1 - py;
+	int     steps = (fabs(dx) > fabs(dy)) ? fabs(dx) : fabs(dy);
+	double  x_inc = dx / steps;
+	double  y_inc = dy / steps;
+	double  x = px;
+	double  y = py;
+	int     i = 0;
+	while (i < steps)
+	{
+		put_pixel(mlx, (int)x, (int)y, 0x00FF00);
+		x += x_inc;
+		y += y_inc;
+		i++;
+	}
+}
+
 int drawmap(t_mlx *mlx)
 {
 	int	x;
@@ -122,37 +146,28 @@ int drawmap(t_mlx *mlx)
 		}
 		y++;
 	}
-	int px = (int)(mlx->player.x * TILE);
-	int py = (int)(mlx->player.y * TILE);
+	int px = (int)((mlx->player.x * TILE));
+	int py = (int)((mlx->player.y * TILE));
 	drawcircle(py, px, 0xFF0000, 2, mlx);
+	drawdirectionline(mlx);
 	return (0);
 }
-
-int handlekeys(t_mlx *mlx)
-{
-	double plrx;
-	double speed;
-	double plry;
-	
-	plrx = mlx->player.x;
-	plry = mlx->player.y;
-	speed = 0.03;
-	mlx->player.speed = speed;
-	if (mlx->player.walkdirection == 1 && mlx->data.map[(int)(plry - speed)][(int)plrx] != '1')
-		mlx->player.y -= speed;
-	if (mlx->player.walkdirection == -1 && mlx->data.map[(int)(plry + speed)][(int)plrx] != '1')
-		mlx->player.y += speed;
-	if (mlx->player.turndirection == 1 && mlx->data.map[(int)plry][(int)(plrx - speed)] != '1')
-		mlx->player.x -= speed;
-	if (mlx->player.turndirection == -1 && mlx->data.map[(int)plry][(int)(plrx + speed)] != '1')
-		mlx->player.x += speed;
-	return (0);
-}
-
 
 int update(t_mlx *mlx)
 {
-	handlekeys(mlx);
+	double movestep;
+	double new_x;
+	double new_y;
+
+	mlx->player.rotationangle += mlx->player.turndirection * mlx->player.rotationspeed;
+	movestep = mlx->player.walkdirection * mlx->player.speed;
+	new_x = mlx->player.x + cos(mlx->player.rotationangle) * movestep;
+	new_y = mlx->player.y + sin(mlx->player.rotationangle) * movestep;
+	if (mlx->data.map[(int)new_y][(int)new_x] != '1')
+	{
+		mlx->player.x = new_x;
+		mlx->player.y = new_y;
+	}
     drawmap(mlx);
     mlx_put_image_to_window(mlx->mlx, mlx->mlxwin, mlx->img, 0, 0);
     return(0);
@@ -163,33 +178,36 @@ void initstruct(t_player *player)
 	player->turndirection = 0;
 	player->walkdirection = 0;
 	player->rotationangle = PI / 2;
-	player->rotationspeed = 2 * (PI / 180);
+	player->rotationspeed = 0.01;
 	player->rad = 3;
-	player->speed = 0.3;
+	player->speed = 0.004;
 }
 
 int keypress(int key, t_mlx *mlx)
 {
-	if (key == W)
+	
+	if (key == ESC)
+		cleanexit(mlx);
+	if (key == W || key == UP)
 		mlx->player.walkdirection = 1;
-	else if (key == S)
+	if (key == S || key == DOWN)
 		mlx->player.walkdirection = -1;
-	else if (key == A)
-		mlx->player.turndirection = 1;
-	else if (key == D)
+	if (key == A || key == LEFT)
 		mlx->player.turndirection = -1;
+	if (key == D || key == RIGHT)
+		mlx->player.turndirection = 1;
 	return (0);
 }
 
 int keyrelease(int key, t_mlx *mlx)
 {
-	if (key == W)
+	if (key == W || key == UP)
 		mlx->player.walkdirection = 0;
-	else if (key == S)
+	if (key == S || key == DOWN)
 		mlx->player.walkdirection = 0;
-	else if (key == A)
+	if (key == A || key == LEFT)
 		mlx->player.turndirection = 0;
-	else if (key == D)
+	if (key == D || key == RIGHT)
 		mlx->player.turndirection = 0;
 	return (0);
 }
