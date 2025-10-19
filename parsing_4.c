@@ -6,7 +6,7 @@
 /*   By: azaimi <azaimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:59:50 by azaimi            #+#    #+#             */
-/*   Updated: 2025/09/27 17:30:50 by azaimi           ###   ########.fr       */
+/*   Updated: 2025/10/14 17:12:33 by azaimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,42 @@ int	parse_dir_v2(t_data *data)
 	}
 	else
 		return (0);
+}
+
+void	get_dir(t_data *data)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	data->dir = malloc(sizeof(char *) * (data->len + 1));
+	if (data->cubfile[i])
+	{
+		while (i < 4)
+		{
+			data->dir[j++] = ft_substr(data->cubfile[i], 0, \
+				ft_strlen(data->cubfile[i]));
+			i++;
+		}
+	}
+	data->dir[j] = NULL;
+}
+
+int	check_rgb(t_data *data)
+{
+	int	i;
+
+	i = 4;
+	if (data->cubfile[0])
+	{
+		while (data->cubfile[i])
+		{
+			if (data->cubfile[i][0] == '\0')
+				i++;
+			else
+				break ;
+		}
+	}
+	return (i);
 }

@@ -6,11 +6,13 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:38:26 by azaimi            #+#    #+#             */
-/*   Updated: 2025/09/27 21:55:59 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/19 20:54:39 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
+int	g_sig = 0;
 
 bool	haswallat(t_mlx *mlx, double x, double y)
 {
@@ -36,36 +38,44 @@ double	update_angle(double angle)
 {
 	angle = fmod(angle, 2 * PI);
 	if (angle < 0)
-	{
 		angle += 2 * PI;
-	}
 	return (angle);
+}
+
+static void	init_ray_struct(t_mlx *mlx, double ray_angle, int i)
+{
+	mlx->rays[i].rayangle = update_angle(ray_angle);
+	mlx->rays[i].wallhorhitx = 0;
+	mlx->rays[i].wallverhitx = 0;
+	mlx->rays[i].wallhorhity = 0;
+	mlx->rays[i].wallverhity = 0;
+	mlx->rays[i].distance = 0;
+	mlx->rays[i].israyfacingdown = (mlx->rays[i].rayangle > 0
+			&& mlx->rays[i].rayangle < PI);
+	mlx->rays[i].israyfacingup = !mlx->rays[i].israyfacingdown;
+	mlx->rays[i].israyfacingright = (mlx->rays[i].rayangle < (0.5 * PI)
+			|| mlx->rays[i].rayangle > (1.5 * PI));
+	mlx->rays[i].israyfacingleft = !mlx->rays[i].israyfacingright;
 }
 
 void	cast_all_rays(t_mlx *mlx, int i)
 {
 	double	ray_angle;
+	double	fov;
 
-	ray_angle = mlx->player.rotationangle - (FOV / 2);
+	fov = 60 * (PI / 180);
+	ray_angle = mlx->player.rotationangle - (fov / 2);
+	if (mlx->rays && g_sig != 0)
+		free(mlx->rays);
 	mlx->rays = malloc(sizeof(t_Ray) * RAYS);
 	if (!mlx->rays)
 		return ;
+	g_sig = 1;
 	while (i < RAYS - 1)
 	{
-		mlx->rays[i].rayAngle = update_angle(ray_angle);
-		mlx->rays[i].wallhorhitx = 0;
-		mlx->rays[i].wallverhitx = 0;
-		mlx->rays[i].wallhorhity = 0;
-		mlx->rays[i].wallverhity = 0;
-		mlx->rays[i].distance = 0;
-		mlx->rays[i].isRayFacingDown = mlx->rays[i].rayAngle > 0
-			&& mlx->rays[i].rayAngle < PI;
-		mlx->rays[i].isRayFacingUp = !mlx->rays[i].isRayFacingDown;
-		mlx->rays[i].isRayFacingRight = mlx->rays[i].rayAngle < (0.5 * PI)
-			|| mlx->rays[i].rayAngle > (1.5 * PI);
-		mlx->rays[i].isRayFacingLeft = !mlx->rays[i].isRayFacingRight;
+		init_ray_struct(mlx, ray_angle, i);
 		cast_single_ray(mlx, ray_angle, i);
-		ray_angle += FOV / RAYS;
+		ray_angle += fov / RAYS;
 		i++;
 	}
 }

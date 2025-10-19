@@ -3,8 +3,9 @@ NAME = cub3D
 MLX = minilibx/libmlx_Linux.a
 
 SRC = main.c get_next_line.c get_next_line_utils.c utils.c parsing.c render.c \
-		render_2.c render_3.c render_4.c parsing_2.c raycasting.c raycasting_2.c \
-		parsing_3.c parsing_4.c helper.c render_5.c helper_2.c utils_2.c
+		render_2.c render_3.c texture.c parsing_2.c raycasting.c raycasting_2.c \
+		parsing_3.c parsing_4.c helper.c helper_2.c utils_2.c parsing_6.c \
+		parsing_7.c texture_2.c
 
 OBJ = $(SRC:.c=.o)
 

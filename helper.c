@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azaimi <azaimi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 16:01:35 by azaimi            #+#    #+#             */
-/*   Updated: 2025/09/27 20:42:18 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/14 18:18:14 by azaimi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,13 @@ void	doublearraylen(char **av, t_data *data)
 		exit(1);
 	}
 	len = 0;
-	while ((line = get_next_line(j)) != NULL)
+	line = get_next_line(j);
+	while (line)
 	{
 		tmp = line;
 		len++;
 		free(tmp);
+		line = get_next_line(j);
 	}
 	close(j);
 	data->len = len;
@@ -74,7 +76,7 @@ int	extractcubfile(t_data *data, char **av)
 {
 	int		j;
 	int		k;
-	char *tmp;
+	char	*tmp;
 	char	*line;
 
 	data->cubfile = malloc((data->len + 1) * sizeof(char *));
@@ -82,7 +84,8 @@ int	extractcubfile(t_data *data, char **av)
 	j = open(av[1], O_RDONLY);
 	if (j == -1)
 		return (printf("Invalid CUB File !\n"), exit(1), 0);
-	while ((line = get_next_line(j)) != NULL)
+	line = get_next_line(j);
+	while (line != NULL)
 	{
 		tmp = line;
 		data->cubfile[k] = malloc(ft_strlen(line) + 1);
@@ -91,6 +94,7 @@ int	extractcubfile(t_data *data, char **av)
 			data->cubfile[k][ft_strlen(data->cubfile[k]) - 1] = '\0';
 		k++;
 		free(tmp);
+		line = get_next_line(j);
 	}
 	data->cubfile[k] = NULL;
 	close(j);
