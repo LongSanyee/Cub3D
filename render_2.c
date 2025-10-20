@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azaimi <azaimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:39:30 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/15 15:29:09 by azaimi           ###   ########.fr       */
+/*   Updated: 2025/10/20 02:51:14 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ int	createmap(t_mlx *mlx)
 			if (isplayer(mlx->data.map[y][x]))
 			{
 				mlx->data.playerdir = mlx->data.map[y][x];
-				mlx->player.x = x;
-				mlx->player.y = y;
+				mlx->player.x = x + 0.5;
+				mlx->player.y = y + 0.5;
 				dir_player(mlx);
 				mlx->data.map[y][x] = '0';
 			}

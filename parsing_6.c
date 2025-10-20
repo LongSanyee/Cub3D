@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 17:30:00 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/19 19:49:57 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 05:53:31 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,65 +26,42 @@ void	initvars(t_vars *vars)
 	vars->result = 0;
 }
 
-int	getresult(t_data data, t_vars vars)
+int	parsevalue(char *line, int *index)
 {
-	return (vars.result * 10 + (data.cubfile[vars.i][vars.j] - '0'));
-}
+	int	result;
 
-int	getceiling(t_data *data)
-{
-	t_vars	vars;
-
-	initvars(&vars);
-	while (data->cubfile[vars.i])
+	result = 0;
+	while (line[*index])
 	{
-		if (!ft_strncmp(data->cubfile[vars.i], "C", 1))
-		{
-			vars.j = 1;
-			while (data->cubfile[vars.i][vars.j])
-			{
-				if (isnum(data->cubfile[vars.i][vars.j]))
-					vars.result = getresult(*data, vars);
-				if (data->cubfile[vars.i][vars.j] == ','
-						|| data->cubfile[vars.i][vars.j + 1] == '\0')
-				{
-					data->ceiling[vars.k++] = vars.result;
-					vars.result = 0;
-				}
-				vars.j++;
-			}
-			break ;
-		}
-		vars.i++;
+		if (isnum(line[*index]))
+			result = result * 10 + (line[*index] - '0');
+		if (result > 255)
+			return (-1);
+		if (line[*index] == ',' || line[*index + 1] == '\0')
+			return (result);
+		(*index)++;
 	}
-	return (1);
+	return (result);
 }
 
-int	getfloor(t_data *data)
+int	storecolors(int *cf, char *line, t_data *data)
 {
-	t_vars	vars;
+	int	j;
+	int	k;
+	int	result;
 
-	initvars(&vars);
-	while (data->cubfile[vars.i])
+	j = 0;
+	k = 0;
+	while (k < 3)
 	{
-		if (!ft_strncmp(data->cubfile[vars.i], "F", 1))
+		result = parsevalue(line, &j);
+		if (result == -1)
 		{
-			vars.j = 1;
-			while (data->cubfile[vars.i][vars.j])
-			{
-				if (isnum(data->cubfile[vars.i][vars.j]))
-					vars.result = getresult(*data, vars);
-				if (data->cubfile[vars.i][vars.j] == ','
-						|| data->cubfile[vars.i][vars.j + 1] == '\0')
-				{
-					data->floor[vars.k++] = vars.result;
-					vars.result = 0;
-				}
-				vars.j++;
-			}
-			break ;
+			printf("Wrong map data !\n");
+			ft_exit(data);
 		}
-		vars.i++;
+		cf[k++] = result;
+		j++;
 	}
 	return (1);
 }

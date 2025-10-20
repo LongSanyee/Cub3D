@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 20:56:59 by rammisse          #+#    #+#             */
-/*   Updated: 2025/10/19 20:56:59 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 04:07:44 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	drawtexture(t_mlx *mlx, t_render *re)
 	if (re->wallheight > HEIGHT)
 		vars.tex_pos = (re->wallheight - HEIGHT) / 2;
 	vars.tex_pos *= (double)vars.text->height / re->wallheight;
-	re->x = re->i * re->stripwidth;
 	re->z = 0;
 	texturehelp(&vars, re, mlx);
 }

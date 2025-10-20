@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 23:57:26 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/19 20:54:25 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 05:56:19 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	init_hor(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 	r->wallhorhity = 0;
 	r->hordistance = 1e30;
 	r->foundhorwall = false;
-	r->ay = floor(mlx->player.y * TILE / TILE) * TILE;
+	r->ay = floor(mlx->player.y) * TILE;
 	if (mlx->rays[i].israyfacingdown)
 		r->ay += TILE;
 	r->ax = mlx->player.x * TILE
@@ -39,10 +39,15 @@ void	init_hor(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 
 void	cast_hor(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 {
+	int	max_steps;
+	int	steps;
+
+	max_steps = (int)(mlx->data.len + mlx->data.k) * 2;
+	steps = 0;
 	init_hor(mlx, ray_angle, i, r);
-	while (r->nexthortouchx >= 0 && r->nexthortouchy >= 0
-		&& r->nexthortouchx < ((int)mlx->data.len * TILE)
-		&& r->nexthortouchy < ((int)mlx->data.k * TILE))
+	while (steps < max_steps && r->nexthortouchx >= 0 && r->nexthortouchy >= 0
+		&& r->nexthortouchx <= ((int)mlx->data.len * TILE)
+		&& r->nexthortouchy <= ((int)mlx->data.k * TILE))
 	{
 		if (haswallat(mlx, r->nexthortouchx, r->nexthortouchy))
 		{
@@ -54,11 +59,9 @@ void	cast_hor(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 					r->nexthortouchx, r->nexthortouchy);
 			break ;
 		}
-		else
-		{
-			r->nexthortouchx += r->xstep;
-			r->nexthortouchy += r->ystep;
-		}
+		r->nexthortouchx += r->xstep;
+		r->nexthortouchy += r->ystep;
+		steps++;
 	}
 }
 
@@ -68,7 +71,7 @@ void	init_ver(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 	r->wallverhity = 0;
 	r->verdistance = 1e30;
 	r->foundverwall = false;
-	r->ax = floor(mlx->player.x * TILE / TILE) * TILE;
+	r->ax = floor(mlx->player.x) * TILE;
 	if (mlx->rays[i].israyfacingright)
 		r->ax += TILE;
 	r->ay = mlx->player.y * TILE
@@ -85,14 +88,23 @@ void	init_ver(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 	r->nextvertouchy = r->ay;
 	if (mlx->rays[i].israyfacingleft)
 		r->nextvertouchx -= 0.01;
+	if (mlx->rays[i].israyfacingup)
+		r->nextvertouchy -= 0.01;
+	else if (mlx->rays[i].israyfacingdown)
+		r->nextvertouchy += 0.01;
 }
 
 void	cast_ver(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 {
+	int	max_steps;
+	int	steps;
+
+	max_steps = (int)(mlx->data.len + mlx->data.k) * 2;
+	steps = 0;
 	init_ver(mlx, ray_angle, i, r);
-	while (r->nextvertouchx >= 0 && r->nextvertouchy >= 0
-		&& r->nextvertouchx < ((int)mlx->data.len * TILE)
-		&& r->nextvertouchy < ((int)mlx->data.k * TILE))
+	while (steps < max_steps && r->nextvertouchx >= 0 && r->nextvertouchy >= 0
+		&& r->nextvertouchx <= ((int)mlx->data.len * TILE)
+		&& r->nextvertouchy <= ((int)mlx->data.k * TILE))
 	{
 		if (haswallat(mlx, r->nextvertouchx, r->nextvertouchy))
 		{
@@ -104,11 +116,9 @@ void	cast_ver(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 					r->nextvertouchx, r->nextvertouchy);
 			break ;
 		}
-		else
-		{
-			r->nextvertouchx += r->xstep;
-			r->nextvertouchy += r->ystep;
-		}
+		r->nextvertouchx += r->xstep;
+		r->nextvertouchy += r->ystep;
+		steps++;
 	}
 }
 

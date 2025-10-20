@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:41:00 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/19 20:56:07 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 04:01:49 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	texturehelp(t_vars *vars, t_render *re, t_mlx *mlx)
 				vars->tex_y = 0;
 			if (vars->tex_y >= vars->text->height)
 				vars->tex_y = vars->text->height - 1;
-			put_pixel(mlx, re->x + re->z, re->y,
+			put_pixel(mlx, re->i, re->y,
 				getcolor(vars->text, vars->tex_x, vars->tex_y));
 			vars->tex_pos += (double)vars->text->height / re->wallheight;
 			re->y++;

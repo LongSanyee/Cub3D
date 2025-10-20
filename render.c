@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 00:06:10 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/19 20:56:02 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 05:56:35 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,4 @@ void	render(t_mlx *win)
 	mlx_hook(win->mlxwin, 6, 1L << 6, handlemouse, win);
 	mlx_loop_hook(win->mlx, update, win);
 	mlx_loop(win->mlx);
-}
-
-int	keyrelease(int key, t_mlx *mlx)
-{
-	if (key == W)
-		mlx->player.walkdirection = 0;
-	if (key == S)
-		mlx->player.walkdirection = 0;
-	if (key == A || key == LEFT)
-		mlx->player.turndirection = 0;
-	if (key == D || key == RIGHT)
-		mlx->player.turndirection = 0;
-	return (0);
 }

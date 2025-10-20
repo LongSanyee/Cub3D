@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:38:26 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/19 20:54:39 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 03:19:06 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	cast_all_rays(t_mlx *mlx, int i)
 	while (i < RAYS - 1)
 	{
 		init_ray_struct(mlx, ray_angle, i);
-		cast_single_ray(mlx, ray_angle, i);
+		cast_single_ray(mlx, mlx->rays[i].rayangle, i);
 		ray_angle += fov / RAYS;
 		i++;
 	}

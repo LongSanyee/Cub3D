@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/10/19 20:55:24 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 05:53:22 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #  define BUFFER_SIZE 42
 # endif
 
-# define TILE 5
+# define TILE 32
 # define RAYS WIDTH
 # define WALL_STRIP_WIDTH 5
 
@@ -42,8 +42,8 @@
 # include <stdbool.h>
 # include <math.h>
 
-# define WIDTH 1500
-# define HEIGHT 900
+# define WIDTH 800
+# define HEIGHT 800
 # define PI 3.14159
 
 typedef struct s_texture
@@ -99,6 +99,7 @@ typedef struct s_player
 	double	angle;
 	int		turndirection;
 	int		walkdirection;
+	int		strafedirection;
 	double	rotationangle;
 	double	rotationspeed;
 	double	speed;
@@ -196,6 +197,8 @@ typedef struct s_vars
 int			gettextures(t_data *data);
 int			check_rgb(t_data *data);
 char		*get_next_line(int fd);
+int			parsevalue(char *line, int *index);
+int			storecolors(int *cf, char *line, t_data *data);
 int			handlemouse(int x, int y, void *param);
 void		drawtexture(t_mlx *mlx, t_render *re);
 t_texture	*getwalltexture(t_mlx *mlx, int i);
