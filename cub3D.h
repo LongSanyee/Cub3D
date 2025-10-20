@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/10/20 23:22:11 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/21 00:00:47 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,6 @@ typedef struct s_vars
 	int			result;
 	char		*tmp;
 	char		*updated;
-	int			tex_y;
 	int			tex_x;
 	double		wallhitx;
 	double		tex_pos;

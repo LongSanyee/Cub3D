@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 20:56:59 by rammisse          #+#    #+#             */
-/*   Updated: 2025/10/20 22:28:38 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/21 00:01:38 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,26 @@ void	drawtexture(t_mlx *mlx, t_render *re)
 	vars.tex_pos *= (double)vars.text->height / re->wallheight;
 	re->z = 0;
 	texturehelp(&vars, re, mlx);
+}
+
+void	texturehelp(t_vars *vars, t_render *re, t_mlx *mlx)
+{
+	while (re->z < re->stripwidth)
+	{
+		re->y = re->walltop;
+		while (re->y < re->wallbottom)
+		{
+			if (vars->tex_pos < 0)
+				vars->tex_pos = 0;
+			if (vars->tex_pos >= vars->text->height)
+				vars->tex_pos = vars->text->height - 1;
+			put_pixel(mlx, re->i, re->y,
+				getcolor(vars->text, vars->tex_x, (int)vars->tex_pos));
+			vars->tex_pos += (double)vars->text->height / re->wallheight;
+			re->y++;
+		}
+		re->z++;
+	}
 }
 
 void	render3dwalls(t_mlx *mlx)

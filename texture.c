@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:41:00 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/20 04:01:49 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:53:01 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,26 +63,5 @@ t_texture	*getwalltexture(t_mlx *mlx, int i)
 			return (&mlx->south);
 		else
 			return (&mlx->north);
-	}
-}
-
-void	texturehelp(t_vars *vars, t_render *re, t_mlx *mlx)
-{
-	while (re->z < re->stripwidth)
-	{
-		re->y = re->walltop;
-		while (re->y < re->wallbottom)
-		{
-			vars->tex_y = (int)vars->tex_pos;
-			if (vars->tex_y < 0)
-				vars->tex_y = 0;
-			if (vars->tex_y >= vars->text->height)
-				vars->tex_y = vars->text->height - 1;
-			put_pixel(mlx, re->i, re->y,
-				getcolor(vars->text, vars->tex_x, vars->tex_y));
-			vars->tex_pos += (double)vars->text->height / re->wallheight;
-			re->y++;
-		}
-		re->z++;
 	}
 }
