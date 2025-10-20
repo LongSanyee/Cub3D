@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:11 by rammisse          #+#    #+#             */
-/*   Updated: 2025/10/04 10:30:42 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:22:24 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ void	ft_exit(t_data *data)
 
 int	check_all(t_data *data)
 {
-	if (!parse_rgb(data) || !check_num(data) || !parse_dir(data))
+	if (!parse_rgb(data) || !parse_dir(data))
 	{
-		if (!parse_rgb_v2(data) || !check_num(data) || !parse_dir_v2(data))
+		if (!parse_rgb_v2(data) || !parse_dir_v2(data))
 			return (0);
 		else
 			return (1);

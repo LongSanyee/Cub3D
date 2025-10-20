@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azaimi <azaimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:58:52 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/14 18:19:17 by azaimi           ###   ########.fr       */
+/*   Updated: 2025/10/20 23:38:36 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,14 @@ static int	check_rgb_chars(char *str, int i)
 			flag2++;
 			flag = 1;
 			i++;
+			while (str[i] && str[i++] == ' ')
+				if (!ft_isdigit(str[i]))
+					return (0);
 		}
 		else
 			return (0);
 	}
-	if (flag2 != 2)
-		return (0);
-	return (1);
+	return (flag2 == 2);
 }
 
 int	check_col_rgb(t_data *data, int j)
@@ -71,27 +72,28 @@ int	check_col_rgb(t_data *data, int j)
 	return (check_rgb_chars(&data->rgb[j][i], 0));
 }
 
-static int	check_rgb_chars_v2(char *s)
+static int	check_rgb_chars_v2(char *str, int i)
 {
-	int	i;
 	int	flag;
 	int	flag2;
 
-	i = 0;
 	flag = 0;
 	flag2 = 0;
-	while (s[i])
+	while (str[i])
 	{
-		if (ft_isdigit(s[i]))
+		if (ft_isdigit(str[i]))
 		{
 			i++;
 			flag = 0;
 		}
-		else if (s[i] == ',' && !flag)
+		else if (str[i] == ',' && !flag)
 		{
 			flag2++;
 			flag = 1;
 			i++;
+			while (str[i] && str[i++] == ' ')
+				if (!ft_isdigit(str[i]))
+					return (0);
 		}
 		else
 			return (0);
@@ -108,5 +110,5 @@ int	check_col_rgb_v2(t_data *data, int j)
 		i++;
 	if (data->rgb_2[j][i] == '\0')
 		return (0);
-	return (check_rgb_chars_v2(&data->rgb_2[j][i]));
+	return (check_rgb_chars_v2(&data->rgb_2[j][i], i));
 }

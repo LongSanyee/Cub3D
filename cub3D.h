@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/10/20 05:53:22 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:22:11 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,7 @@ char		*get_next_line(int fd);
 int			parsevalue(char *line, int *index);
 int			storecolors(int *cf, char *line, t_data *data);
 int			handlemouse(int x, int y, void *param);
+void		do_c_f(t_mlx *mlx);
 void		drawtexture(t_mlx *mlx, t_render *re);
 t_texture	*getwalltexture(t_mlx *mlx, int i);
 char		*ft_strjoin(char *s1, const char *s2);
@@ -227,7 +228,6 @@ int			validatemap(t_data *data);
 void		ft_exit(t_data *data);
 int			validateinside(t_data *data);
 void		freedoublearr(char **arr);
-int			check_num(t_data *data);
 void		get_rgb_v2(t_data *data);
 int			parse_rgb_v2(t_data *data);
 int			parse_dir_v2(t_data *data);
@@ -240,7 +240,7 @@ int			isplayer(char c);
 int			createmap(t_mlx *mlx);
 void		render(t_mlx *win);
 void		freeeverything(t_data *data);
-void		cast_all_rays(t_mlx *mlx, int i);
+void		cast_all_rays(t_mlx *mlx);
 bool		haswallat(t_mlx *mlx, double x, double y);
 void		render3dwalls(t_mlx *mlx);
 double		update_angle(double angle);

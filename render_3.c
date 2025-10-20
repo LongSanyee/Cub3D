@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:40:13 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/20 19:48:39 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:14:40 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	update(t_mlx *mlx)
 		mlx->player.x = new_x;
 		mlx->player.y = new_y;
 	}
-	cast_all_rays(mlx, 0);
+	cast_all_rays(mlx);
 	render3dwalls(mlx);
 	mlx_put_image_to_window(mlx->mlx, mlx->mlxwin, mlx->img, 0, 0);
 	return (0);

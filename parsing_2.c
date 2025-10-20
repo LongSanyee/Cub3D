@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azaimi <azaimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 15:17:00 by azaimi            #+#    #+#             */
-/*   Updated: 2025/09/27 17:30:09 by azaimi           ###   ########.fr       */
+/*   Updated: 2025/10/20 23:22:03 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,6 @@ int	parse_dir(t_data *data)
 	}
 	else
 		return (0);
-}
-
-int	check_num(t_data *data)
-{
-	if (((data->ceiling[0] >= 0 && data->ceiling[0] <= 255)
-			&& (data->ceiling[1] >= 0 && data->ceiling[1] <= 255)
-			&& (data->ceiling[2] >= 0 && data->ceiling[2] <= 255))
-		&& ((data->floor[0] >= 0 && data->floor[0] <= 255)
-			&& (data->floor[1] >= 0 && data->floor[1] <= 255)
-			&& (data->floor[2] >= 0 && data->floor[2] <= 255)))
-		return (1);
-	return (0);
 }
 
 void	get_rgb_v2(t_data *data)

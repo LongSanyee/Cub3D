@@ -11,7 +11,7 @@ OBJ = $(SRC:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror  #-fsanitize=address -g3
+CFLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 

@@ -6,13 +6,11 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:38:26 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/20 19:48:47 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:37:37 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-
-int	g_sig = 0;
 
 bool	haswallat(t_mlx *mlx, double x, double y)
 {
@@ -61,20 +59,23 @@ static void	init_ray_struct(t_mlx *mlx, double ray_angle, int i)
 	mlx->rays[i].israyfacingleft = !mlx->rays[i].israyfacingright;
 }
 
-void	cast_all_rays(t_mlx *mlx, int i)
+void	cast_all_rays(t_mlx *mlx)
 {
-	double	ray_angle;
-	double	fov;
+	int			i;
+	double		fov;
+	static int	leak = 0;
+	double		ray_angle;
 
 	fov = 60 * (PI / 180);
 	ray_angle = mlx->player.rotationangle - (fov / 2);
-	if (mlx->rays && g_sig != 0)
+	i = 0;
+	if (mlx->rays && leak != 0)
 		free(mlx->rays);
 	mlx->rays = malloc(sizeof(t_Ray) * RAYS);
 	if (!mlx->rays)
 		return ;
-	g_sig = 1;
-	while (i < RAYS - 1)
+	leak = 1;
+	while (i < RAYS)
 	{
 		init_ray_struct(mlx, ray_angle, i);
 		cast_single_ray(mlx, mlx->rays[i].rayangle, i);

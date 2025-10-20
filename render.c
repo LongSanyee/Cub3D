@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 00:06:10 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/20 20:21:22 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 22:29:00 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,32 +82,4 @@ void	render(t_mlx *win)
 	mlx_hook(win->mlxwin, 6, 1L << 6, handlemouse, win);
 	mlx_loop_hook(win->mlx, update, win);
 	mlx_loop(win->mlx);
-}
-
-void	render3dwalls(t_mlx *mlx)
-{
-	t_render	re;
-	double		fov;
-
-	re.i = 0;
-	do_c_f(mlx);
-	fov = 60 * (PI / 180);
-	while (re.i < RAYS)
-	{
-		re.correctdistance = mlx->rays[re.i].distance
-			* cos(mlx->rays[re.i].rayangle - mlx->player.rotationangle);
-		re.distanceproj = (WIDTH / 2) / tan(fov / 2);
-		re.wallheight = (int)((TILE / re.correctdistance) * re.distanceproj);
-		re.walltop = (HEIGHT / 2) - (re.wallheight / 2);
-		if (re.walltop < 0)
-			re.walltop = 0;
-		re.wallbottom = (HEIGHT / 2) + (re.wallheight / 2);
-		if (re.wallbottom >= HEIGHT)
-			re.wallbottom = HEIGHT - 1;
-		re.stripwidth = WIDTH / RAYS;
-		if (re.stripwidth < 1)
-			re.stripwidth = 1;
-		drawtexture(mlx, &re);
-		re.i++;
-	}
 }
