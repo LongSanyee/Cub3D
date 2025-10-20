@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 23:57:26 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/20 05:56:19 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 19:41:52 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,10 @@ void	init_hor(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 
 void	cast_hor(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 {
-	int	max_steps;
-	int	steps;
-
-	max_steps = (int)(mlx->data.len + mlx->data.k) * 2;
-	steps = 0;
 	init_hor(mlx, ray_angle, i, r);
-	while (steps < max_steps && r->nexthortouchx >= 0 && r->nexthortouchy >= 0
-		&& r->nexthortouchx <= ((int)mlx->data.len * TILE)
-		&& r->nexthortouchy <= ((int)mlx->data.k * TILE))
+	while (r->nexthortouchx >= 0 && r->nexthortouchy >= 0
+		&& r->nexthortouchx < ((int)mlx->data.longestline * TILE)
+		&& r->nexthortouchy < ((int)mlx->data.k * TILE))
 	{
 		if (haswallat(mlx, r->nexthortouchx, r->nexthortouchy))
 		{
@@ -59,9 +54,11 @@ void	cast_hor(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 					r->nexthortouchx, r->nexthortouchy);
 			break ;
 		}
-		r->nexthortouchx += r->xstep;
-		r->nexthortouchy += r->ystep;
-		steps++;
+		else
+		{
+			r->nexthortouchx += r->xstep;
+			r->nexthortouchy += r->ystep;
+		}
 	}
 }
 
@@ -96,15 +93,10 @@ void	init_ver(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 
 void	cast_ver(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 {
-	int	max_steps;
-	int	steps;
-
-	max_steps = (int)(mlx->data.len + mlx->data.k) * 2;
-	steps = 0;
 	init_ver(mlx, ray_angle, i, r);
-	while (steps < max_steps && r->nextvertouchx >= 0 && r->nextvertouchy >= 0
-		&& r->nextvertouchx <= ((int)mlx->data.len * TILE)
-		&& r->nextvertouchy <= ((int)mlx->data.k * TILE))
+	while (r->nextvertouchx >= 0 && r->nextvertouchy >= 0
+		&& r->nextvertouchx < ((int)mlx->data.longestline * TILE)
+		&& r->nextvertouchy < ((int)mlx->data.k * TILE))
 	{
 		if (haswallat(mlx, r->nextvertouchx, r->nextvertouchy))
 		{
@@ -116,9 +108,11 @@ void	cast_ver(t_mlx *mlx, double ray_angle, int i, t_Raycasting *r)
 					r->nextvertouchx, r->nextvertouchy);
 			break ;
 		}
-		r->nextvertouchx += r->xstep;
-		r->nextvertouchy += r->ystep;
-		steps++;
+		else
+		{
+			r->nextvertouchx += r->xstep;
+			r->nextvertouchy += r->ystep;
+		}
 	}
 }
 

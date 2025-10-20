@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:40:13 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/20 05:48:05 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 19:48:39 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,49 +55,23 @@ int	keyrelease(int key, t_mlx *mlx)
 	return (0);
 }
 
-static int	is_within_bounds(t_mlx *data, int map_x, int map_y)
+static int	can_move(t_mlx *mlx, double x_px, double y_px, double radius_px)
 {
-	if (map_x < 0 || map_x >= (int)data->data.len
-		|| map_y < 0 || map_y >= (int)data->data.k)
+	if (haswallat(mlx, x_px - radius_px, y_px))
 		return (0);
-	return (1);
-}
-
-static int	is_wall(t_mlx *data, int map_x, int map_y)
-{
-	if (!is_within_bounds(data, map_x, map_y))
-		return (1);
-	return (data->data.map[map_y][map_x] == '1');
-}
-
-static int	can_move(t_mlx *data, double x, double y, int margin)
-{
-	int	map_x;
-	int	map_y;
-	int	margin_x;
-	int	margin_y;
-
-	map_x = (int)(x / TILE);
-	map_y = (int)(y / TILE);
-	margin_x = margin / TILE;
-	margin_y = margin / TILE;
-	if (is_wall(data, map_x, map_y))
+	if (haswallat(mlx, x_px + radius_px, y_px))
 		return (0);
-	if (is_wall(data, map_x, map_y - margin_y))
+	if (haswallat(mlx, x_px, y_px - radius_px))
 		return (0);
-	if (is_wall(data, map_x, map_y + margin_y))
+	if (haswallat(mlx, x_px, y_px + radius_px))
 		return (0);
-	if (is_wall(data, map_x - margin_x, map_y))
+	if (haswallat(mlx, x_px - radius_px, y_px - radius_px))
 		return (0);
-	if (is_wall(data, map_x + margin_x, map_y))
+	if (haswallat(mlx, x_px + radius_px, y_px - radius_px))
 		return (0);
-	if (is_wall(data, map_x - margin_x, map_y - margin_y))
+	if (haswallat(mlx, x_px - radius_px, y_px + radius_px))
 		return (0);
-	if (is_wall(data, map_x + margin_x, map_y - margin_y))
-		return (0);
-	if (is_wall(data, map_x - margin_x, map_y + margin_y))
-		return (0);
-	if (is_wall(data, map_x + margin_x, map_y + margin_y))
+	if (haswallat(mlx, x_px + radius_px, y_px + radius_px))
 		return (0);
 	return (1);
 }
@@ -119,7 +93,7 @@ int	update(t_mlx *mlx)
 	movestep = mlx->player.strafedirection * mlx->player.speed;
 	new_x += cos(strafe_angle) * movestep;
 	new_y += sin(strafe_angle) * movestep;
-	if (can_move(mlx, new_x * TILE, new_y * TILE, 1))
+	if (can_move(mlx, new_x * TILE, new_y * TILE, 4.0))
 	{
 		mlx->player.x = new_x;
 		mlx->player.y = new_y;
@@ -127,19 +101,5 @@ int	update(t_mlx *mlx)
 	cast_all_rays(mlx, 0);
 	render3dwalls(mlx);
 	mlx_put_image_to_window(mlx->mlx, mlx->mlxwin, mlx->img, 0, 0);
-	return (0);
-}
-
-int	handlemouse(int x, int y, void *param)
-{
-	int			delta_x;
-	t_mlx		*win;
-	static int	prev_x = -1;
-
-	(void)y;
-	win = (t_mlx *)param;
-	delta_x = x - prev_x;
-	win->player.rotationangle += delta_x * 0.007;
-	prev_x = x;
 	return (0);
 }

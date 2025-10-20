@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 00:06:10 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/20 05:56:35 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 19:48:34 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,20 @@ void	render3dwalls(t_mlx *mlx)
 		drawtexture(mlx, &re);
 		re.i++;
 	}
+}
+
+int	handlemouse(int x, int y, void *param)
+{
+	int			delta_x;
+	t_mlx		*win;
+	static int	prev_x = -1;
+
+	(void)y;
+	win = (t_mlx *)param;
+	delta_x = x - prev_x;
+	win->player.rotationangle += delta_x * 0.007;
+	prev_x = x;
+	return (0);
 }
 
 void	render(t_mlx *win)

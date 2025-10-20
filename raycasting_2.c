@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:38:26 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/20 03:19:06 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/20 19:48:47 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,18 @@ int	g_sig = 0;
 
 bool	haswallat(t_mlx *mlx, double x, double y)
 {
-	int	mapx;
-	int	mapy;
+	int		mapx;
+	int		mapy;
+	size_t	rowlen;
 
 	mapx = (int)(x / TILE);
 	mapy = (int)(y / TILE);
-	if (mapx < 0 || mapx >= (int)mlx->data.len
-		|| mapy < 0 || mapy >= (int)mlx->data.k)
+	if (mapx < 0 || mapy < 0 || mapy >= (int)mlx->data.k)
 		return (true);
-	if (!mlx->data.map[mapy] || mapx >= (int)ft_strlen(mlx->data.map[mapy]))
+	if (!mlx->data.map[mapy])
+		return (true);
+	rowlen = ft_strlen(mlx->data.map[mapy]);
+	if (mapx >= (int)rowlen)
 		return (true);
 	return (mlx->data.map[mapy][mapx] == '1');
 }
