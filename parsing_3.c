@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:58:52 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/20 23:38:36 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/21 00:51:10 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	get_rgb(t_data *data)
 	i = check_rgb(data);
 	j = 0;
 	data->rgb = malloc(sizeof(char *) * (data->len + 1));
+	if (!data->rgb)
+		return ;
 	if (data->cubfile[0])
 	{
 		data->rgb[j++] = ft_substr(data->cubfile[i], 0, \

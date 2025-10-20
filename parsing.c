@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azaimi <azaimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 22:58:03 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/15 16:37:49 by azaimi           ###   ########.fr       */
+/*   Updated: 2025/10/21 00:53:25 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,26 @@ int	validateinside(t_data *data)
 		}
 		x++;
 	}
+	return (1);
+}
+
+int	check_h_w(t_data *data)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (data->map[y])
+	{
+		x = 0;
+		while (data->map[y][x])
+		{
+			x++;
+		}
+		if (ft_strncmp(data->map[y], "\n", 1))
+			y++;
+	}
+	if (x > 100 || y > 100)
+		return (0);
 	return (1);
 }

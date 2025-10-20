@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 17:34:34 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/20 19:40:22 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/21 00:53:53 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int	parsedata(int ac, char **av, t_data *data)
 	if (!validatemap(data))
 		return (printf("Invalid Map !\n"), ft_exit(data), 1);
 	if (!validateinside(data))
-		return (printf("Invalid Map !\n"), ft_exit(data), 0);
+		return (printf("Invalid Map !\n"), ft_exit(data), 1);
+	if (!check_h_w(data))
+		return (printf("Invalid Map (100 * 100) !\n"), ft_exit(data), 1);
 	return (0);
 }

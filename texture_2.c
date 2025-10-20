@@ -6,11 +6,39 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 20:56:59 by rammisse          #+#    #+#             */
-/*   Updated: 2025/10/21 00:01:38 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/21 00:44:13 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
+void	render3dwalls(t_mlx *mlx)
+{
+	t_render	re;
+	double		fov;
+
+	re.i = 0;
+	do_c_f(mlx);
+	fov = 60 * (PI / 180);
+	while (re.i < RAYS)
+	{
+		re.correctdistance = mlx->rays[re.i].distance
+			* cos(mlx->rays[re.i].rayangle - mlx->player.rotationangle);
+		re.distanceproj = (WIDTH / 2) / tan(fov / 2);
+		re.wallheight = (int)((TILE / re.correctdistance) * re.distanceproj);
+		re.walltop = (HEIGHT / 2) - (re.wallheight / 2);
+		if (re.walltop < 0)
+			re.walltop = 0;
+		re.wallbottom = (HEIGHT / 2) + (re.wallheight / 2);
+		if (re.wallbottom >= HEIGHT)
+			re.wallbottom = HEIGHT - 1;
+		re.stripwidth = 1;
+		if (re.stripwidth < 1)
+			re.stripwidth = 1;
+		drawtexture(mlx, &re);
+		re.i++;
+	}
+}
 
 void	drawtexture(t_mlx *mlx, t_render *re)
 {
@@ -51,33 +79,5 @@ void	texturehelp(t_vars *vars, t_render *re, t_mlx *mlx)
 			re->y++;
 		}
 		re->z++;
-	}
-}
-
-void	render3dwalls(t_mlx *mlx)
-{
-	t_render	re;
-	double		fov;
-
-	re.i = 0;
-	do_c_f(mlx);
-	fov = 60 * (PI / 180);
-	while (re.i < RAYS)
-	{
-		re.correctdistance = mlx->rays[re.i].distance
-			* cos(mlx->rays[re.i].rayangle - mlx->player.rotationangle);
-		re.distanceproj = (WIDTH / 2) / tan(fov / 2);
-		re.wallheight = (int)((TILE / re.correctdistance) * re.distanceproj);
-		re.walltop = (HEIGHT / 2) - (re.wallheight / 2);
-		if (re.walltop < 0)
-			re.walltop = 0;
-		re.wallbottom = (HEIGHT / 2) + (re.wallheight / 2);
-		if (re.wallbottom >= HEIGHT)
-			re.wallbottom = HEIGHT - 1;
-		re.stripwidth = 1;
-		if (re.stripwidth < 1)
-			re.stripwidth = 1;
-		drawtexture(mlx, &re);
-		re.i++;
 	}
 }

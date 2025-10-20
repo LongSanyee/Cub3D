@@ -6,7 +6,7 @@
 /*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 08:40:09 by rammisse          #+#    #+#             */
-/*   Updated: 2025/10/21 00:00:47 by rammisse         ###   ########.fr       */
+/*   Updated: 2025/10/21 00:53:14 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,7 @@ typedef struct s_vars
 
 int			gettextures(t_data *data);
 int			check_rgb(t_data *data);
+int			check_h_w(t_data *data);
 char		*get_next_line(int fd);
 int			parsevalue(char *line, int *index);
 int			storecolors(int *cf, char *line, t_data *data);

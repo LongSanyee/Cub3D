@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_4.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azaimi <azaimi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rammisse <rammisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:59:50 by azaimi            #+#    #+#             */
-/*   Updated: 2025/10/14 17:12:33 by azaimi           ###   ########.fr       */
+/*   Updated: 2025/10/21 00:51:33 by rammisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	get_dir_v2(t_data *data)
 	j = 0;
 	count = 0;
 	data->dir_2 = malloc(sizeof(char *) * (data->len + 1));
+	if (!data->dir_2)
+		return ;
 	if (data->cubfile[0])
 	{
 		while (count < 4)
@@ -87,6 +89,8 @@ void	get_dir(t_data *data)
 	i = 0;
 	j = 0;
 	data->dir = malloc(sizeof(char *) * (data->len + 1));
+	if (!data->dir)
+		return ;
 	if (data->cubfile[i])
 	{
 		while (i < 4)
